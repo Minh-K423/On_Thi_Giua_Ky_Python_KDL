@@ -1,0 +1,559 @@
+
+===== PDF PAGE 1 =====
+Python cho Khoa học dữ liệu
+Bài 6 — T ệp và biến đổi dữ liệu
+Hà Minh T uấn
+hmtuan@hcmus.edu.vn
+Khoa T oán - Tin học
+T rường Đại học Khoa học Tự nhiên
+ĐHQG, HCM
+October 20, 2026
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 1 / 41
+
+===== PDF PAGE 2 =====
+Nội dung bài học
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 2 / 41
+
+===== PDF PAGE 3 =====
+Roadmap
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 3 / 41
+
+===== PDF PAGE 4 =====
+Đến giờ, dữ liệu đều do chính ta soạn ra
+diem = [8.5, 4.0, 6.5, 9.0]
+ban_ghi = [("An", "Toan", 8.5), ("Binh", "Ly", 4.0)]
+Dữ liệu thật thì nằm trong tệp, và tệp là thứ người khác tạo ra — bằng Excel, bằng một hệ
+thống nào đó, trên một máy nào đó, ở một nước nào đó.
+Ghi nhớ
+Từ bài này trở đi, mọi buổi thực hành đều bắt đầu bằng việc mở một tệp. Đọc được tệp
+là điều kiện để làm mọi thứ còn lại của học phần.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 4 / 41
+
+===== PDF PAGE 5 =====
+Hai dòng này trông vô hại
+noi_dung = open("diem.csv").read()
+ten, lop, diem = dong.split(",")
+Dự đoán trước khi chạy
+Với một tệp điểm bình thường có tên tiếng Việt, hai dòng trên hỏng ở mấy chỗ?
+Không chỗ nào · một · hai · ba
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 5 / 41
+
+===== PDF PAGE 6 =====
+Ba chỗ, và không chỗ nào chịu báo lỗi
+Chỗ hỏng Hậu quả
+Không khai báo bảng mã tên tiếng Việt thành Nguyá»…n Thá»‹ BÃ¬nh
+Tự tách bằng split(",") một tên có dấu phẩy làm lệch hết các cột
+Không đóng tệp tệp bị giữ, ghi ra có thể mất dữ liệu
+Bài này gồm bốn phần
+Đường dẫn và bảng mã → tệp văn bản và CSV → JSON → comprehension. Ba phần
+đầu là đưa dữ liệu vào ; phần cuối là cách viết gọn những vòng lặp biến đổi dữ liệu mà
+ta đã viết bằng tay ở bài 4.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 6 / 41
+
+===== PDF PAGE 7 =====
+Roadmap
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 7 / 41
+
+===== PDF PAGE 8 =====
+pathlib — đường dẫn là đối tượng, không phải chuỗi
+from pathlib import Path
+p = Path("thu_bai06") / "data" / "diem.csv" # dau / de ghep duong dan
+p.name # 'diem.csv'
+p.stem # 'diem'
+p.suffix # '.csv'
+p.parent # WindowsPath('thu_bai06/data')
+p.exists() # False
+p.parent.mkdir(parents=True, exist_ok=True) # tao thu muc neu chua co
+Ghi nhớ
+Ghép bằng dấu / thì mã chạy được trên cả Windows lẫn Linux; tự nối chuỗi bằng dấu
+gạch chéo ngược là cách cũ, và hỏng khi đổi máy .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 8 / 41
+
+===== PDF PAGE 9 =====
+T ệp có dấu tiếng Việt thì dùng bảng mã nào
+s = "Nguyễn Thị Bình" # 15 ky tu
+s.encode("utf-8") # 20 byte <- duoc
+s.encode("cp1252") # UnicodeEncodeError
+s.encode("cp1258") # UnicodeEncodeError
+T ệp chỉ chứa byte, không chứa chữ. Bảng mã là quy ước đổi chữ thành byte: 15 ký tự ra 20
+byte, vì chữ có dấu cần nhiều hơn một byte. cp1252 và cả cp1258 — bảng mã “tiếng Việt”
+của Windows — không biểu diễn nổi chữ ễ.
+Hai bảng mã cần nhớ
+T ệp của mình: encoding="utf-8". T ệp CSV người khác gửi: encoding="utf-8-sig"
+— Excel hay chèn ba byte vô hình (BOM) vào đầu tệp; thiếu chữ -sig thì cột đầu tiên
+đổi tên và hang["Ten"] báo KeyError: 'Ten'.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 9 / 41
+
+===== PDF PAGE 10 =====
+Vì sao phải khai báo, không để Python tự đoán
+p.read_text() # khong khai bao: tuy may
+p.read_text(encoding="utf-8") # dung
+p.read_text(encoding="cp1252") # chu hong
+Dòng thứ ba, với tệp chứa “Nguyễn Thị Bình”
+Nguyá»…n Thá»‹ BÃ¬nh
+Byte nằm trong tệp không nói nó theo bảng mã nào. Không khai báo thì Python dùng
+bảng mã mặc định của máy đang chạy : Windows tiếng Việt thường là cp1252, còn
+Linux và macOS là UTF-8.
+Cùng một chương trình, cùng một tệp, chạy hai máy ra hai kết quả — và máy mình thì
+vẫn thấy đúng. T ệp không hỏng, chỉ là đọc bằng sai bảng mã.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 10 / 41
+
+===== PDF PAGE 11 =====
+Roadmap
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 11 / 41
+
+===== PDF PAGE 12 =====
+Đọc và ghi tệp văn bản
+Cach ngan - dung cho tep nho
+p.write_text(noi_dung, encoding="utf-8")
+noi_dung = p.read_text(encoding="utf-8")
+Cach day du - dung khi doc tung dong
+with p.open(encoding="utf-8") as f:
+for dong in f:
+xu_ly(dong.rstrip("\n"))
+Ghi nhớ
+with tự đóng tệp khi ra khỏi khối, kể cả khi giữa chừng có lỗi. Đây là lý do không bao giờ
+viết f = open(...) rồi tự nhớ gọi f.close(). Duyệt for dong in f đọc từng dòng
+một, nên tệp 5 GB cũng không đầy bộ nhớ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 12 / 41
+
+===== PDF PAGE 13 =====
+CSV trông đơn giản đến mức ai cũng tự viết
+Mot dong trong tep diem.csv
+"Nguyen Van An, Jr.",24TTH,8.5
+dong.split(",")
+Kết quả
+['"Nguyen Van An', ' Jr."', '24TTH', '8.5'] <- 4 phan
+Cạm bẫy thường gặp
+Bốn, trong khi đáng ra phải là ba. Dấu phẩy nằm trong một trường được đặt trong ngoặc
+kép — đúng chuẩn CSV — nhưng split không biết chuyện đó. Mọi cột từ đây trở đi bị
+lệch, và chương trình vẫn chạy tiếp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 13 / 41
+
+===== PDF PAGE 14 =====
+Dùng mô-đun csv
+import csv
+with p.open(encoding="utf-8-sig", newline="") as f:
+for hang in csv.reader(f):
+print(hang)
+Kết quả
+['Ten', 'Lop', 'Diem']
+['Nguyen Van An, Jr.', '24TTH', '8.5'] <- 3 phan, dung
+Hai tham số bắt buộc nhớ
+encoding="utf-8-sig" để nuốt BOM, và newline="" để mô-đun csv tự lo chuyện
+xuống dòng. Thiếu newline="" lúc ghi thì tệp ra có dòng trống xen kẽ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 14 / 41
+
+===== PDF PAGE 15 =====
+Đọc theo tên cột: DictReader
+with p.open(encoding="utf-8-sig", newline="") as f:
+for hang in csv.DictReader(f):
+print(hang["Ten"], hang["Lop"], hang["Diem"])
+Kết quả
+Nguyen Van An, Jr. 24TTH 8.5
+Tran Thi Binh 24TTH 6.0
+Le Van Chi 25KDL 9.0
+Cạm bẫy thường gặp
+hang["Diem"] là chuỗi '8.5', không phải số. Muốn tính toán thì phải
+float(hang["Diem"]) — đúng cạm bẫy của bài 3, và đây chính là chỗ nó xuất hiện
+trong đời thật.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 15 / 41
+
+===== PDF PAGE 16 =====
+Ghi CSV
+with ra.open("w", encoding="utf-8", newline="") as f:
+w = csv.writer(f)
+w.writerow(["Lop", "TrungBinh"])
+w.writerows([["24TTH", 7.25], ["25KDL", 9.0]])
+T ep ket qua
+Lop,TrungBinh
+24TTH,7.25
+25KDL,9.0
+Ghi nhớ
+"w" ghi đè toàn bộ tệp cũ, không hỏi lại. Nếu tệp đích đang mở trong Excel thì Windows
+chặn, và Python báo PermissionError — đóng Excel rồi chạy lại.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 16 / 41
+
+===== PDF PAGE 17 =====
+Roadmap
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 17 / 41
+
+===== PDF PAGE 18 =====
+Ba lỗi hay gặp lúc mở tệp
+open("khong_co.csv", encoding="utf-8") # duong dan sai
+open(".", encoding="utf-8").read() # tro vao thu muc
+open("nhi_phan.bin", encoding="utf-8").read() # khong phai text
+Dòng cuối của ba thông báo
+FileNotFoundError: [Errno 2] No such file or directory: 'khong_co.csv'
+PermissionError: [Errno 13] Permission denied: '.'
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0
+FileNotFoundError gần như luôn là đứng sai thư mục , chứ không phải mất tệp. In
+Path.cwd() ra xem đang đứng ở đâu.
+PermissionError: đường dẫn trỏ vào thư mục, hoặc tệp đang mở trong Excel.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 18 / 41
+
+===== PDF PAGE 19 =====
+try / except: khi có phương án thay thế
+p = Path("khong_co.csv")
+try:
+noi_dung = p.read_text(encoding="utf-8")
+except FileNotFoundError:
+print("Khong thay", p, "- kiem tra lai duong dan")
+noi_dung = ""
+Kết quả
+Khong thay khong_co.csv - kiem tra lai duong dan
+try chỉ bọc đúng dòng có thể hỏng; except ghi rõ loại lỗi.
+Bắt lỗi chỉ đáng làm khi có phương án thay thế : dùng giá trị mặc định, hỏi lại đường
+dẫn, bỏ qua tệp đó. Không có phương án thì để chương trình dừng — dừng ngay dễ sửa
+hơn chạy tiếp với dữ liệu sai.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 19 / 41
+
+===== PDF PAGE 20 =====
+Một dòng hỏng không nên làm dừng cả tệp
+diem.csv co mot dong ghi ”vang” thay cho diem
+tong, dem, hong = 0.0, 0, []
+with Path("diem.csv").open(encoding="utf-8-sig", newline="") as f:
+for i, hang in enumerate(csv.DictReader(f), start=2):
+try:
+tong += float(hang["Diem"])
+dem += 1
+except ValueError:
+hong.append(i)
+print("Doc duoc", dem, "dong, trung binh", round(tong / dem, 2))
+print("Dong hong:", hong)
+Kết quả
+Doc duoc 2 dong, trung binh 8.75
+Dong hong: [3]
+Không bắt thì cả chương trình dừng ở dòng thứ ba với ValueError: could not convert string
+to float: 'vang' .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 20 / 41
+
+===== PDF PAGE 21 =====
+Ghi rõ loại lỗi, đừng viết except trơn
+try:
+dem += float(hang["Diem1"]) # go nham ten cot
+except:
+pass
+Kết quả
+Tong: 0 - khong dong nao vao, ma khong bao gi
+Cạm bẫy thường gặp
+except: trơn bắt mọi lỗi, kể cả KeyError do gõ nhầm tên cột. Chương trình chạy xong,
+in ra số 0, và không có gì báo rằng tên cột sai. Viết except ValueError: thì lỗi gõ
+nhầm vẫn hiện ra như nó phải thế.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 21 / 41
+
+===== PDF PAGE 22 =====
+Roadmap
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 22 / 41
+
+===== PDF PAGE 23 =====
+Khi dữ liệu không phẳng như bảng
+CSV chỉ chứa được bảng chữ nhật. Một sinh viên có nhiều điểm và nhiều hoạt động thì không
+nhét vừa một dòng.
+sv = {
+"ma": "24TTH001",
+"ten": "Nguyen Van An",
+"diem": {"Toan": 8.5, "Ly": 6.0}, # tu dien long nhau
+"hoat_dong": ["CLB Tin hoc", "Doi bong"], # danh sach
+}
+Ghi nhớ
+JSON là định dạng của gần như mọi API trên Internet. Cấu trúc của nó khớp đúng với
+dict và list của Python — nên đọc JSON vào là ra ngay những thứ ta học ở bài 2.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 23 / 41
+
+===== PDF PAGE 24 =====
+Đọc và ghi JSON
+import json
+jp.write_text(json.dumps(sv, ensure_ascii=False, indent=2), encoding="utf-8")
+lai = json.loads(jp.read_text(encoding="utf-8"))
+lai["diem"]["Toan"] # 8.5
+T ep ghi ra
+{
+"ma": "24TTH001",
+"ten": "Nguyễn Văn An",
+"diem": { "Toan": 8.5, "Ly": 6.0 },
+...
+dumps đổi đối tượng Python thành chuỗi; loads làm ngược lại — chữ s cuối nghĩa là string.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 24 / 41
+
+===== PDF PAGE 25 =====
+Hai tham số đừng quên, và một thứ JSON không biết
+ensure_ascii - mac dinh lam kho doc chu tieng Viet
+json.dumps({"ten": "Nguyễn"})
+# {"ten": "Nguy\u1ec5n"} <- van dung, nhung nguoi khong doc noi
+json.dumps({"ten": "Nguyễn"}, ensure_ascii=False)
+# {"ten": "Nguyễn"}
+JSON khong co kieu ngay thang
+json.dumps({"ngay": datetime.date(2026, 9, 7)})
+# TypeError: Object of type date is not JSON serializable
+json.dumps({"ngay": datetime.date(2026, 9, 7).isoformat()})
+# {"ngay": "2026-09-07"}
+Còn indent=2 chỉ để người đọc được; bỏ đi thì tệp nhỏ hơn nhưng nằm trên một dòng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 25 / 41
+
+===== PDF PAGE 26 =====
+Roadmap
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 26 / 41
+
+===== PDF PAGE 27 =====
+Một mẫu ta đã viết rất nhiều lần
+Mau tich luy cua bai 4
+kq = []
+for d in diem:
+kq.append(d * 10)
+Cung viec do, viet mot dong
+kq = [d * 10 for d in diem]
+# [85.0, 40.0, 65.0, 90.0, 35.0, 70.0]
+Ghi nhớ
+Ba dòng thành một, và không còn dòng kq = [] nào để quên. Đây là cách viết chuẩn
+mực của Python cho việc biến đổi từng phần tử của một dãy .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 27 / 41
+
+===== PDF PAGE 28 =====
+Cách đọc một comprehension
+[ d * 10 for d in diem if d >= 5 ]
+# ^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^
+# lam gi voi tung cai gi giu lai cai nao
+T uong duong voi
+kq = []
+for d in diem:
+if d >= 5:
+kq.append(d * 10)
+Đọc thành lời, từ giữa ra : “với mỗi d trong diem, nếu d từ 5 trở lên, thì lấy d * 10” .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 28 / 41
+
+===== PDF PAGE 29 =====
+Đổi ngoặc, đổi kiểu kết quả
+ten = ["An", "Binh", "Chi"]
+[t.upper() for t in ten] # ['AN', 'BINH', 'CHI'] list
+{len(t) for t in ten} # {2, 3, 4} set
+{t: len(t) for t in ten} # {'An': 2, 'Binh': 4, ...} dict
+Mot viec dict comprehension lam rat gon: dao nguoc bang tra
+ma_lop = {"24TTH": "Toan Tin", "25KDL": "Khoa hoc Du lieu"}
+{v: k for k, v in ma_lop.items()}
+# {'Toan Tin': '24TTH', 'Khoa hoc Du lieu': '25KDL'}
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 29 / 41
+
+===== PDF PAGE 30 =====
+Khi nào không nên dùng
+Con doc duoc
+[t for t, d in ban_ghi if d >= 5]
+Bat dau kho doc - hai tang
+[x for hang in bang for x in hang]
+Ngưỡng nên giữ
+Một dòng, một tầng for, nhiều nhất một if. Vượt quá thì viết vòng lặp bình thường —
+mã ngắn hơn không phải lúc nào cũng là mã tốt hơn .
+Comprehension cũng không nhanh hơn vòng lặp một cách đáng kể. Lý do dùng nó là đọc rõ ý
+và ít chỗ sai, chứ không phải tốc độ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 30 / 41
+
+===== PDF PAGE 31 =====
+Ghép cả bài lại
+Doc tep, loc, tinh - trong sau dong
+import csv
+from pathlib import Path
+with Path("diem.csv").open(encoding="utf-8-sig", newline="") as f:
+ban_ghi = list(csv.DictReader(f))
+diem_dat = [float(h["Diem"]) for h in ban_ghi if float(h["Diem"]) >= 5]
+print(len(diem_dat), round(sum(diem_dat) / len(diem_dat), 2))
+Sáu dòng này dùng đủ mọi thứ của Chương 1: đường dẫn, bảng mã, đọc CSV theo tên cột, ép
+kiểu, lọc, và hai hàm dựng sẵn. Từ tuần sau, phần đọc dữ liệu sẽ luôn có dạng như thế này .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 31 / 41
+
+===== PDF PAGE 32 =====
+Roadmap
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 32 / 41
+
+===== PDF PAGE 33 =====
+Chỗ nào nhận đường dẫn thì cũng nhận địa chỉ web
+import pandas as pd
+URL = ("https://raw.githubusercontent.com/mwaskom/"
+"seaborn-data/master/penguins.csv")
+df = pd.read_csv(URL)
+print(df.shape)
+print(df.head(3))
+Kết quả
+(344, 7)
+species island bill_length_mm ... body_mass_g sex
+0 Adelie Torgersen 39.1 ... 3750.0 MALE
+1 Adelie Torgersen 39.5 ... 3800.0 FEMALE
+pandas tự tải tệp rồi đọc. Cần bytes thô thì dùng urllib.request.urlopen(URL).read().
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 33 / 41
+
+===== PDF PAGE 34 =====
+GitHub: phải lấy đường dẫn raw
+# dia chi nhin thay tren thanh dia chi khi dang xem tep:
+https://github.com/mwaskom/seaborn-data/blob/master/penguins.csv
+# dia chi RAW, lay bang nut "Raw" o goc tren ben phai:
+https://raw.githubusercontent.com/mwaskom/seaborn-data/master/penguins.csv
+pd.read_csv với địa chỉ đầu tiên
+ParserError: Error tokenizing data. C error: Expected 1 fields in
+line 28, saw 9
+Địa chỉ đầu là trang web hiển thị tệp: tải về được 314 KB HTML chứ không phải 13 KB dữ
+liệu. Hai dấu hiệu của đường dẫn đúng: tên miền raw.githubusercontent.com, và không có
+chữ blob.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 34 / 41
+
+===== PDF PAGE 35 =====
+Dữ liệu tiếng Việt trên GitHub: vẫn là chuyện bảng mã
+Danh sach 63 tinh thanh, dinh dang JSON
+import json, urllib.request
+URL = ("https://raw.githubusercontent.com/madnh/"
+"hanhchinhvn/master/dist/tinh_tp.json")
+raw = urllib.request.urlopen(URL).read() # bytes
+tinh = json.loads(raw.decode("utf-8")) # khai bao bang ma
+print(len(tinh))
+print([v["name"] for v in list(tinh.values())[:5]])
+Kết quả
+63
+['Hà Nội', 'Hà Giang', 'Cao Bằng', 'Bắc Kạn', 'Tuyên Quang']
+Đổi sang decode("cp1252") thì tên tỉnh lại thành chuỗi rác như ở phần đầu bài: tải từ mạng không
+miễn cho ta việc khai báo bảng mã.Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 35 / 41
+
+===== PDF PAGE 36 =====
+Google Drive: đổi liên kết chia sẻ thành liên kết tải
+Lien ket bam ”Chia se” tren Drive
+https://drive.google.com/file/d/1jHS6KbBj1jJ3da1DtQ4chEnImhQCbhvZ/view
+￿￿￿￿￿￿￿￿￿ ID cua tep ￿￿￿￿￿￿￿￿￿
+Lien ket tai thang: ghep ID vao sau uc?export=download&id=
+ID = "1jHS6KbBj1jJ3da1DtQ4chEnImhQCbhvZ"
+df = pd.read_csv("https://drive.google.com/uc?export=download&id=" + ID)
+print(df.shape, round(df["Diem"].mean(), 2))
+Kết quả
+(8, 3) 7.0
+T ệp phải chia sẻ ở mức bất kỳ ai có đường liên kết ; để “hạn chế” thì tải về chỉ được trang đăng
+nhập. T ệp rất lớn thì Drive chèn thêm trang xác nhận, khi đó dùng gdown.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 36 / 41
+
+===== PDF PAGE 37 =====
+T ải một lần, những lần sau đọc từ đĩa
+from pathlib import Path
+import urllib.request
+p = Path("penguins.csv")
+if not p.exists():
+p.write_bytes(urllib.request.urlopen(URL).read())
+df = pd.read_csv(p)
+Mạng phòng máy hay chập chờn, và tải lại cùng một tệp mỗi lần chạy là chậm.
+Dữ liệu trên mạng đổi được , còn kết quả phân tích thì phải lặp lại được: giữ bản đã tải,
+ghi lại ngày tải và địa chỉ nguồn.
+Cạm bẫy thường gặp
+Đường dẫn có chứa khoá hoặc mật khẩu thì không đưa vào mã nguồn, và không đẩy lên
+GitHub.Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 37 / 41
+
+===== PDF PAGE 38 =====
+Roadmap
+1 Đặt vấn đề
+2 Đường dẫn và bảng mã
+3 T ệp văn bản và CSV
+4 Khi tệp không như mong đợi
+5 JSON
+6 Comprehension
+7 Lấy dữ liệu từ trên mạng
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 38 / 41
+
+===== PDF PAGE 39 =====
+Chín câu cần mang về
+1 Ghép đường dẫn bằng Path và dấu /, đừng nối chuỗi.
+2 Luôn truyền encoding. Đọc CSV người khác gửi thì dùng utf-8-sig.
+3 Mở tệp bằng with để nó tự đóng.
+4 Đừng tự tách CSV bằng split(",") — dùng mô-đun csv.
+5 Mọi thứ đọc từ CSV đều là chuỗi; muốn tính thì phải ép kiểu.
+6 JSON dùng cho dữ liệu lồng nhau; nhớ ensure_ascii=False.
+7 Comprehension để biến đổi một dãy: một dòng, một tầng, nhiều nhất một if.
+8 try / except có ghi rõ loại lỗi, chỉ dùng khi có phương án thay thế.
+9 Đọc thẳng từ mạng được: GitHub phải là đường dẫn raw, Drive phải chia sẻ công khai.
+T ải một lần rồi lưu về đĩa.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 39 / 41
+
+===== PDF PAGE 40 =====
+Năm cạm bẫy im lặng trong bài này
+Việc làm Hỏng thế nào
+Quên encoding chữ tiếng Việt hỏng, và hỏng khác nhau trên
+mỗi máy
+T ệp có BOM, đọc bằng utf-8 KeyError ở đúng cột đầu tiên
+Tách CSV bằng split(",") lệch cột khi có dấu phẩy trong trường
+Quên newline="" khi ghi tệp ra có dòng trống xen kẽ
+Viết except: trơn nuốt luôn lỗi gõ nhầm tên cột, kết quả ra 0
+Ghi nhớ
+Bốn cái đầu chỉ lộ ra với dữ liệu thật . T ệp tự gõ để thử thì không có dấu tiếng Việt,
+không có BOM, không có dấu phẩy trong tên — nên chạy thử thấy đúng hết.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 40 / 41
+
+===== PDF PAGE 41 =====
+Hết Chương 1
+Sáu bài vừa rồi cho đủ để tự viết một chương trình xử lý dữ liệu từ đầu đến cuối: đọc
+tệp vào, biến đổi, tính toán, ghi kết quả ra .
+Bài này dừng ở mức giới thiệu là có chủ đích. Bốn cấu trúc dữ liệu của bài 2 và ba định
+dạng tệp ở đây sẽ dùng lại ở mọi tuần còn lại — thuộc chúng bằng cách dùng, không
+phải bằng cách nghe giảng thêm.
+T uần sau bắt đầu Chương 2: lập trình hướng đối tượng , chiếm một phần ba học
+phần. Ở đó, cái ta gói lại không còn là một việc, mà là dữ liệu cùng với những việc làm
+trên dữ liệu đó .
+Câu hỏi?
+Hà Minh T uấn — hmtuan@hcmus.edu.vn
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 6 October 20, 2026 41 / 41

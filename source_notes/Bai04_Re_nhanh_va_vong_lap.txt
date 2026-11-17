@@ -1,0 +1,604 @@
+
+===== PDF PAGE 1 =====
+Python cho Khoa học dữ liệu
+Bài 4 — Rẽ nhánh và vòng lặp
+Hà Minh T uấn
+hmtuan@hcmus.edu.vn
+Khoa T oán - Tin học
+T rường Đại học Khoa học Tự nhiên
+ĐHQG, HCM
+October 4, 2026
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 1 / 44
+
+===== PDF PAGE 2 =====
+Nội dung bài học
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 2 / 44
+
+===== PDF PAGE 3 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 3 / 44
+
+===== PDF PAGE 4 =====
+Câu hỏi để lại từ bài 3
+Yêu cầu: bỏ khỏi danh sách những điểm dưới 5 . Đoạn mã dưới đây đọc lên nghe rất đúng với
+lời phát biểu đó.
+diem = [8, 3, 9, 2, 4, 7]
+for d in diem:
+if d < 5:
+diem.remove(d)
+print(diem)
+Dự đoán trước khi chạy
+In ra gì? [8, 9, 7] hay một danh sách khác?
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 4 / 44
+
+===== PDF PAGE 5 =====
+Kết quả — và lý do
+Kết quả
+[8, 9, 4, 7]
+Số 4 vẫn còn, dù nó nhỏ hơn 5.
+Vòng lặp for đi theo vị trí: 0, 1, 2, … Khi xoá số 3 ở vị trí 1, mọi phần tử phía sau lùi lại
+một ô. Lần lặp kế tiếp đọc vị trí 2 — và đã nhảy qua mất một phần tử.
+Không có thông báo lỗi. Chương trình chạy xong, trả về một danh sách trông hợp lệ.
+Ghi nhớ
+Vòng lặp là công cụ ta gõ nhiều nhất trong cả học phần. Viết được vòng lặp thì chưa đủ
+— phải biết nó thật sự làm gì ở từng bước.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 5 / 44
+
+===== PDF PAGE 6 =====
+Bài này gồm sáu phần
+1 Rẽ nhánh — viết điều kiện đúng ý mình, và ba chỗ điều kiện sai mà không báo lỗi.
+2 Câu lệnh match-case — cách viết gọn khi một giá trị có nhiều khả năng.
+3 Vòng lặp for — bốn cách duyệt chiếm gần hết mã ta sẽ viết.
+4 Vòng lặp while — dùng khi không biết trước phải lặp bao nhiêu lần.
+5 break, continue, vòng lặp lồng nhau.
+6 Năm mẫu lặp thường gặp khi xử lý dữ liệu — học thuộc để khỏi nghĩ lại mỗi lần.
+Phần cuối bài trả lời câu hỏi quan trọng nhất: cho một yêu cầu bằng lời, làm sao đi tới được
+vòng lặp?
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 6 / 44
+
+===== PDF PAGE 7 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 7 / 44
+
+===== PDF PAGE 8 =====
+Biểu thức điều kiện là biểu thức cho ra True hoặc False
+8 > 5 # True
+8 >= 8 # True
+8 == 8.0 # True <- so sanh GIA TRI, khong so sanh kieu
+8 != 5 # True
+"An" == "an" # False <- chuoi phan biet hoa thuong
+"An" < "Binh" # True <- so theo thu tu bang chu cai
+Một dấu bằng hay hai
+= là gán, == là so sánh . Viết if diem = 5 thì Python báo lỗi cú pháp ngay — đây là
+một trong số ít cạm bẫy mà Python chịu báo cho ta biết.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 8 / 44
+
+===== PDF PAGE 9 =====
+Ghép điều kiện: and, or, not
+diem, chuyen_can = 8, 0.9
+diem >= 5 and chuyen_can >= 0.8 # True <- ca hai phai dung
+diem >= 9 or chuyen_can >= 0.8 # True <- chi can mot ve dung
+not (diem >= 5) # False
+Python cho phep viet noi chuoi nhu trong toan
+x = 7
+0 <= x <= 10 # True <- doc thang, khong can 'and'
+Ghi nhớ
+Cách viết 0 <= x <= 10 là của riêng Python. Nhiều ngôn ngữ khác không hiểu nó. Ở
+đây thì cứ dùng — ngắn hơn và ít sai hơn.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 9 / 44
+
+===== PDF PAGE 10 =====
+if / elif / else
+if diem >= 8:
+xep_loai = "Gioi"
+elif diem >= 5:
+xep_loai = "Dat"
+else:
+xep_loai = "Khong dat"
+Python xét lần lượt từ trên xuống và dừng ngay ở nhánh đầu tiên đúng . Các nhánh
+phía dưới không được xét nữa.
+Khối lệnh của mỗi nhánh xác định bằng thụt lề , không phải bằng ngoặc. Thụt lề sai là
+đổi ý nghĩa chương trình.
+elif và else đều không bắt buộc.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 10 / 44
+
+===== PDF PAGE 11 =====
+Cạm bẫy 1: thứ tự elif quyết định kết quả
+diem = 9
+if diem >= 5:
+xep = "Dat" # <- bat het, ke ca diem 9
+elif diem >= 8:
+xep = "Gioi" # <- khong lan nao chay toi day
+Cạm bẫy thường gặp
+Điểm 9 dừng ngay ở nhánh >= 5 nên không bao giờ tới được nhánh >= 8. Nhánh "Gioi"
+là mã chết — không lần nào chạy , mà Python không hề cảnh báo.Điều kiện chặt nhất
+phải đặt lên trên cùng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 11 / 44
+
+===== PDF PAGE 12 =====
+Cạm bẫy 2: viết or theo lối nói tiếng Việt
+Câu tiếng Việt “nếu x bằng 1 hoặc 2” dịch thẳng sang mã sẽ ra thế này:
+x = 5
+x == 1 or 2 # -> 2 <- KHONG bao loi
+x == 1 or x == 2 # -> False <- moi dung
+or nhận hai biểu thức điều kiện , không nhận hai giá trị. Python đọc vế phải là số 2, mà 2
+luôn được coi là “đúng” .
+Vậy if x == 1 or 2: luôn luôn vào nhánh đó, với mọi x.
+Cách viết gọn mà vẫn đúng
+if x in (1, 2): — ngắn hơn cả hai cách trên và đọc đúng như câu tiếng Việt.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 12 / 44
+
+===== PDF PAGE 13 =====
+Cạm bẫy 3: so sánh thừa
+Bài 3 đã nói: danh sách rỗng, chuỗi rỗng, số 0 và None đều được coi là “sai” . Nhờ vậy nhiều
+câu if viết ngắn lại được.
+Cot phai la cach nen viet
+if len(ds) > 0: # viet gon duoc thanh: if ds:
+if ten != "": # viet gon duoc thanh: if ten:
+if tim() == None: # phai viet la: if tim() is None:
+Nhưng có một chỗ không được rút gọn
+Nếu giá trị hợp lệ có thể là 0 — điểm 0, số lượng 0 — thì if diem: sẽ bỏ sót nó. Lúc
+đó phải viết rõ if diem is not None:. Đây là lỗi rất hay gặp khi xử lý dữ liệu thật.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 13 / 44
+
+===== PDF PAGE 14 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 14 / 44
+
+===== PDF PAGE 15 =====
+Khi một giá trị có nhiều khả năng
+Chuỗi if/elif dưới đây lặp lại tên biến ma ở mọi nhánh:
+if ma == "A": xep = "Gioi"
+elif ma == "B": xep = "Kha"
+elif ma == "C": xep = "Trung binh"
+else: xep = "Khong ro"
+Viet bang match - noi ten bien dung mot lan
+match ma:
+case "A": xep = "Gioi"
+case "B": xep = "Kha"
+case "C": xep = "Trung binh"
+case _: xep = "Khong ro" # nhanh vet, dong vai tro cua else
+Dấu gạch dưới trong case _ nghĩa là “khớp mọi thứ, và tôi không cần giữ lại giá trị đó” .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 15 / 44
+
+===== PDF PAGE 16 =====
+Ba dạng mẫu dùng nhiều nhất
+match ten_ngay: # 1. mot nhanh nhieu gia tri: dau |
+case "T7" | "CN": loai = "cuoi tuan"
+case _: loai = "trong tuan"
+match d: # 2. them dieu kien phu: case ... if ...
+case _ if d >= 8: xep = "Gioi"
+case _ if d >= 5: xep = "Dat"
+case _: xep = "Khong dat"
+match ban_ghi: # 3. mau cau truc: kiem tra VA tach ra
+case (ten, mon, diem): print(ten, mon, diem)
+case (ten, diem): print(ten, diem)
+case _: print("khong doc duoc")
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 16 / 44
+
+===== PDF PAGE 17 =====
+Dạng thứ ba là thế mạnh thật sự của match
+Chay voi ba ban ghi khac nhau
+("An", "Toan", 8.5) -> An Toan 8.5
+("Binh", 6.0) -> Binh 6.0
+("hong",) -> khong doc duoc
+Một dòng case (ten, mon, diem) làm hai việc: kiểm tra bản ghi có đúng ba phần
+không, và nếu đúng thì đặt tên luôn cho ba phần đó.
+Viết bằng if thì phải if len(bg) == 3: rồi mới ten, mon, diem = bg — hai dòng,
+và dễ quên dòng kiểm tra.
+Ghi nhớ
+Đây chính là việc ta sẽ làm liên tục khi đọc dữ liệu thô: mỗi dòng có thể đúng định dạng,
+có thể không.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 17 / 44
+
+===== PDF PAGE 18 =====
+Cạm bẫy: một cái tên trần trong case
+NGUONG = 5
+match d:
+case NGUONG:
+print(f"khop! NGUONG bay gio = {NGUONG}")
+Goi voi d = 99
+khop! NGUONG bay gio = 99
+Cạm bẫy thường gặp
+Tên trần trong case không phải phép so sánh . Nó là mẫu bắt giá trị : khớp với mọi
+thứ, rồi gán giá trị đó cho cái tên — NGUONG vừa bị đổi thành 99. Muốn so với hằng số
+thì viết thẳng case 5:, hoặc dùng tên có dấu chấm như case Nguong.DAT:.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 18 / 44
+
+===== PDF PAGE 19 =====
+Khi nào dùng match, khi nào dùng if
+Dùng match khi Dùng if/elif khi
+so một giá trị với nhiều khả năng mỗi nhánh xét một biến khác nhau
+cần tách cấu trúc ra trong lúc kiểm tra chỉ có hai nhánh
+danh sách khả năng dài và phẳng điều kiện là bất đẳng thức đơn giản
+Điều kiện phiên bản
+match chỉ có từ Python 3.10 trở lên. Máy phòng thực hành và môi trường ảo của
+học phần này dùng bản mới hơn nên không sao, nhưng mã viết bằng match sẽ báo
+SyntaxError trên máy cài Python cũ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 19 / 44
+
+===== PDF PAGE 20 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 20 / 44
+
+===== PDF PAGE 21 =====
+for duyệt qua từng phần tử
+for ten in ["An", "Binh", "Chi"]:
+print("chao", ten)
+Kết quả
+chao An
+chao Binh
+chao Chi
+Đọc thành lời: “với mỗi ten trong danh sách này , làm việc sau”.
+Biến ten do ta đặt tên, và nhận lần lượt từng giá trị.
+for chạy được trên danh sách, chuỗi, tuple, từ điển, tệp — mọi thứ “duyệt được” .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 21 / 44
+
+===== PDF PAGE 22 =====
+range — khi cần lặp theo số lần
+list(range(5)) # [0, 1, 2, 3, 4]
+list(range(2, 6)) # [2, 3, 4, 5]
+list(range(0, 10, 3)) # [0, 3, 6, 9]
+list(range(3, 0, -1)) # [3, 2, 1]
+Luôn tính từ đầu, dừng trước cuối : range(2, 6) không có số 6.
+Quy ước này khiến range(n) có đúng n phần tử — rất tiện, và cũng là nguồn của lỗi
+lệch một đơn vị hay gặp nhất.
+Đừng dùng range(len(ds)) chỉ để lấy giá trị
+Viết for i in range(len(ds)): print(ds[i]) là cách của ngôn ngữ khác. T rong
+Python hãy viết thẳng for x in ds:.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 22 / 44
+
+===== PDF PAGE 23 =====
+enumerate — khi cần cả chỉ số lẫn giá trị
+for i, ten in enumerate(["An", "Binh", "Chi"], start=1):
+print(f"{i}. {ten}")
+Kết quả
+1. An
+2. Binh
+3. Chi
+Không có start thì đếm từ 0. Ở đây đánh số cho người đọc nên bắt đầu từ 1.
+Đây là câu trả lời đúng cho nhu cầu “tôi cần biết đang ở phần tử thứ mấy” — thay vì tự
+tạo một biến đếm rồi cộng thêm một.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 23 / 44
+
+===== PDF PAGE 24 =====
+zip — duyệt hai danh sách song song
+ten = ["An", "Binh", "Chi"]
+diem = [8.5, 6.0, 9.0]
+for t, d in zip(ten, diem):
+print(t, d)
+Kết quả
+An 8.5
+Binh 6.0
+Chi 9.0
+Ghi nhớ
+zip dừng ở danh sách ngắn hơn và không báo gì — hai danh sách lệch số phần tử thì
+phần dư bị bỏ im lặng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 24 / 44
+
+===== PDF PAGE 25 =====
+Duyệt từ điển
+so_sach = {"An": 3, "Binh": 1, "Chi": 5}
+for t, n in so_sach.items():
+print(f"{t} muon {n} cuon")
+Kết quả
+An muon 3 cuon
+Binh muon 1 cuon
+Chi muon 5 cuon
+.items() cho từng cặp khoá – giá trị .
+.keys() chỉ khoá, .values() chỉ giá trị. Viết for k in so_sach: cũng là duyệt khoá.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 25 / 44
+
+===== PDF PAGE 26 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 26 / 44
+
+===== PDF PAGE 27 =====
+while — lặp đến khi điều kiện sai
+Luy thua cua 3 dau tien vuot qua 100
+n = 1
+while n < 100:
+n = n * 3
+print(n)
+Kết quả
+243
+Chọn for hay while
+Biết trước sẽ lặp trên cái gì, hoặc lặp bao nhiêu lần → for. Chỉ biết điều kiện dừng ,
+không biết bao nhiêu lần → while. T rong xử lý dữ liệu, phần lớn là for.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 27 / 44
+
+===== PDF PAGE 28 =====
+Vòng lặp vô hạn
+Chuong trinh nay khong bao gio dung
+n = 1
+while n < 100:
+print(n) # thieu dong lam n lon len
+Mỗi lần viết while, tự trả lời ba câu:
+1 Biến nào trong điều kiện sẽ thay đổi?
+2 Dòng nào bên trong thân vòng lặp làm nó thay đổi?
+3 Nó có chắc chắn đi tới chỗ làm điều kiện sai không?
+Cạm bẫy thường gặp
+Lỡ chạy phải vòng lặp vô hạn thì nhấn Ctrl + C trong terminal. T rong notebook thì bấm
+nút dừng ô lệnh.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 28 / 44
+
+===== PDF PAGE 29 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 29 / 44
+
+===== PDF PAGE 30 =====
+break thoát hẳn, continue bỏ qua một vòng
+break - dung ngay khi tim thay
+for i, d in enumerate([4, 6, 3, 9, 2]):
+if d >= 9:
+print(f"tim thay {d} o vi tri {i}")
+break # -> tim thay 9 o vi tri 3
+continue - bo qua phan con lai cua vong nay
+tong = 0
+for d in [8, -1, 9, -1, 7]:
+if d < 0:
+continue # bo qua ban ghi hong
+tong += d
+print(tong) # -> 24
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 30 / 44
+
+===== PDF PAGE 31 =====
+Vòng lặp lồng nhau
+for i in range(1, 4):
+dong = ""
+for j in range(1, 4):
+dong += f"{i * j:4d}"
+print(dong)
+Kết quả
+1 2 3
+2 4 6
+3 6 9
+break chỉ thoát vòng lặp gần nhất , không thoát cả hai.
+Vòng lồng nhau chạy m ×n lần: hai danh sách mười nghìn phần tử là một trăm triệu lượt.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 31 / 44
+
+===== PDF PAGE 32 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 32 / 44
+
+===== PDF PAGE 33 =====
+Mẫu 1 và 2: đếm và tích luỹ
+diem = [8.5, 4.0, 6.5, 9.0, 3.5, 7.0]
+dem = 0 # 1. DEM - khoi tao TRUOC vong lap
+tong = 0 # 2. TICH LUY
+for d in diem:
+tong += d
+if d >= 5:
+dem += 1
+print(dem, tong) # -> 4 38.5
+Ghi nhớ
+Cả hai mẫu theo đúng ba bước: khởi tạo trước vòng lặp, cập nhật bên trong, dùng sau
+khi lặp xong. Đặt dòng khởi tạo vào trong vòng lặp là lỗi kinh điển: kết quả bị đặt lại
+mỗi vòng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 33 / 44
+
+===== PDF PAGE 34 =====
+Mẫu 3: lọc ra một danh sách mới
+dat = []
+for d in diem:
+if d >= 5:
+dat.append(d)
+print(dat)
+Kết quả
+[8.5, 6.5, 9.0, 7.0]
+Đây chính là lời giải cho ví dụ mở đầu
+Muốn bỏ bớt phần tử, đừng xoá khỏi danh sách đang duyệt . Hãy duyệt danh sách
+cũ và gom cái muốn giữ sang một danh sách mới. Cách này luôn đúng, và đọc cũng rõ
+ý hơn.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 34 / 44
+
+===== PDF PAGE 35 =====
+Mẫu 4: tìm cực trị kèm theo nhãn
+max(diem) cho biết điểm cao nhất, nhưng không cho biết của ai.
+ten = ["An", "Binh", "Chi", "Dung", "Giang", "Ha"]
+ten_cao, diem_cao = ten[0], diem[0]
+for t, d in zip(ten, diem):
+if d > diem_cao:
+ten_cao, diem_cao = t, d
+print(ten_cao, diem_cao) # -> Dung 9.0
+Cạm bẫy thường gặp
+Khởi tạo bằng phần tử đầu tiên , đừng khởi tạo bằng 0. Nếu mọi giá trị đều âm — nhiệt
+độ, lợi nhuận — thì mốc 0 khiến vòng lặp không tìm ra gì.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 35 / 44
+
+===== PDF PAGE 36 =====
+Mẫu 5: gom nhóm vào từ điển
+ban_ghi = [("An", "Toan"), ("Binh", "Ly"), ("Chi", "Toan"), ("Dung", "Ly")]
+nhom = {}
+for t, mon in ban_ghi:
+if mon not in nhom:
+nhom[mon] = [] # lan dau gap mon nay
+nhom[mon].append(t)
+Kết quả
+{'Toan': ['An', 'Chi'], 'Ly': ['Binh', 'Dung']}
+Ghi nhớ
+Mẫu này đáng thuộc nhất trong năm mẫu. Ở Chương 3, groupby của pandas làm đúng
+việc này bằng một dòng — nhưng phải viết được bằng tay trước thì mới hiểu nó làm gì.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 36 / 44
+
+===== PDF PAGE 37 =====
+Năm mẫu — bảng để tra
+Mẫu Khởi tạo Bên trong vòng lặp
+Đếm dem = 0 if dk: dem += 1
+Tích luỹ tong = 0 tong += x
+Lọc ket_qua = [] if dk: ket_qua.append(x)
+Cực trị tot_nhat = ds[0] if x > tot_nhat: tot_nhat = x
+Gom nhóm nhom = {} tạo khoá nếu chưa có, rồi append
+Ghi nhớ
+Phần lớn mã xử lý dữ liệu ta viết trong học phần này là một trong năm mẫu trên, hoặc
+vài mẫu ghép lại. Thuộc chúng thì thời gian nghĩ chuyển từ “viết vòng lặp thế nào” sang
+“bài toán này cần gì” .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 37 / 44
+
+===== PDF PAGE 38 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 38 / 44
+
+===== PDF PAGE 39 =====
+Bốn câu hỏi, rồi mới gõ
+“Tính điểm trung bình của từng môn, cho một danh sách bản ghi
+gồm tên, môn và điểm. ”
+1 Duyệt trên cái gì? — danh sách bản ghi, mỗi bản ghi ba phần.
+2 Kết quả có dạng gì? — mỗi môn một con số → từ điển.
+3 Cần nhớ gì qua các vòng lặp? — trung bình cần tổng và số lượng, nên phải hai từ điển.
+4 Đây là mẫu nào? — gom nhóm, và bên trong mỗi nhóm là tích luỹ .
+Ghi nhớ
+Bốn câu này trả lời được thì phần gõ mã gần như chỉ còn là chép lại. Khi bí lúc làm bài,
+phần lớn là bí ở câu 2 và câu 3, chứ không phải ở cú pháp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 39 / 44
+
+===== PDF PAGE 40 =====
+Và đây là mã
+ban_ghi = [("An", "Toan", 8.5), ("Binh", "Ly", 4.0),
+("Chi", "Toan", 9.0), ("Dung", "Ly", 6.5), ("Ha", "Toan", 3.5)]
+tong_mon, dem_mon = {}, {}
+for t, mon, d in ban_ghi:
+if mon not in tong_mon: # cau 3: nho gi qua cac vong
+tong_mon[mon], dem_mon[mon] = 0, 0
+tong_mon[mon] += d
+dem_mon[mon] += 1
+for mon in tong_mon:
+print(mon, round(tong_mon[mon] / dem_mon[mon], 2))
+Kết quả
+Toan 7.0 Ly 5.25
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 40 / 44
+
+===== PDF PAGE 41 =====
+Roadmap
+1 Đặt vấn đề
+2 Rẽ nhánh
+3 Câu lệnh match-case
+4 Vòng lặp for
+5 Vòng lặp while
+6 break, continue và vòng lặp lồng nhau
+7 Năm mẫu lặp trong xử lý dữ liệu
+8 Từ lời phát biểu đến vòng lặp
+9 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 41 / 44
+
+===== PDF PAGE 42 =====
+Tám câu cần mang về
+1 if xét từ trên xuống và dừng ở nhánh đúng đầu tiên — điều kiện chặt nhất đặt lên trên.
+2 or nối hai điều kiện, không nối hai giá trị. Cần liệt kê thì dùng in.
+3 match gọn hơn if khi so một giá trị với nhiều khả năng, và tách được cấu trúc ngay
+trong case.
+4 range tính từ đầu, dừng trước cuối.
+5 Cần chỉ số thì dùng enumerate; đi song song hai danh sách thì dùng zip.
+6 while phải có dòng làm điều kiện tiến tới chỗ sai.
+7 break chỉ thoát vòng lặp gần nhất.
+8 Năm mẫu lặp: đếm, tích luỹ , lọc, cực trị, gom nhóm.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 42 / 44
+
+===== PDF PAGE 43 =====
+Năm cạm bẫy im lặng trong bài này
+Việc làm Hỏng thế nào
+Xoá phần tử khỏi danh sách đang
+duyệt
+bỏ sót phần tử, không báo lỗi
+Đặt elif chặt hơn xuống dưới nhánh dưới thành mã chết
+Viết if x == 1 or 2 luôn đúng với mọi x
+zip hai danh sách lệch độ dài phần dư bị bỏ, không báo gì
+Tên trần trong case khớp mọi giá trị, và ghi đè lên chính cái tên
+đó
+Ghi nhớ
+Cả năm đều cho ra kết quả trông bình thường . Cách duy nhất để bắt được chúng là thử
+với một bộ dữ liệu nhỏ mà ta đã biết trước đáp án — thói quen này sẽ theo suốt học
+phần.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 43 / 44
+
+===== PDF PAGE 44 =====
+Chuẩn bị cho bài 5
+Bài 5 — Hàm , ngay trong tuần này .
+Năm mẫu lặp hôm nay sẽ được đóng gói thành hàm, để dùng lại mà không phải chép mã.
+Đó cũng là bước đầu tiên của việc phân rã một yêu cầu lớn thành nhiều việc nhỏ .
+Có một cạm bẫy về khả biến của bài 3 sẽ quay lại ở bài 5: chuyện gì xảy ra khi một hàm
+nhận danh sách rỗng làm giá trị mặc định của tham số.
+Câu hỏi?
+Hà Minh T uấn — hmtuan@hcmus.edu.vn
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 4 October 4, 2026 44 / 44

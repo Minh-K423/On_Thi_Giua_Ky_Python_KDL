@@ -1,0 +1,55 @@
+{
+  "bookings": 24,
+  "completed": 21,
+  "cancelled": 3,
+  "charges_vnd": 1250000,
+  "paid_vnd": 1100000,
+  "due_vnd": 150000,
+  "mean_minutes": 63.714285714285715,
+  "by_zone": {
+    "PC": {
+      "bookings": 8,
+      "completed": 7,
+      "cancelled": 1,
+      "charges_vnd": 335000,
+      "paid_vnd": 320000,
+      "due_vnd": 15000,
+      "mean_minutes": 75.14285714285714
+    },
+    "CONSOLE": {
+      "bookings": 8,
+      "completed": 7,
+      "cancelled": 1,
+      "charges_vnd": 405000,
+      "paid_vnd": 345000,
+      "due_vnd": 60000,
+      "mean_minutes": 60.142857142857146
+    },
+    "VR": {
+      "bookings": 8,
+      "completed": 7,
+      "cancelled": 1,
+      "charges_vnd": 510000,
+      "paid_vnd": 435000,
+      "due_vnd": 75000,
+      "mean_minutes": 55.857142857142854
+    }
+  },
+  "top_due": [
+    {
+      "booking_id": "B015",
+      "player": "Thảo Vy",
+      "due_vnd": 60000
+    },
+    {
+      "booking_id": "B008",
+      "player": "Bùi Khang",
+      "due_vnd": 27500
+    },
+    {
+      "booking_id": "B002",
+      "player": "Trần Bình",
+      "due_vnd": 22500
+    }
+  ]
+}

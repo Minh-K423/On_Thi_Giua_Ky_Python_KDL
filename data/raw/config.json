@@ -1,0 +1,19 @@
+{
+  "title": "NightShift - Game Cafe Closing Report",
+  "shift_date": "2026-11-17",
+  "block_minutes": 30,
+  "rates_vnd": {
+    "PC": 15000,
+    "CONSOLE": 22500,
+    "VR": 30000
+  },
+  "alert_threshold_vnd": 20000,
+  "metadata": {
+    "currency": "VND",
+    "synthetic": true,
+    "notes": [
+      "Ôn tập Python",
+      "Offline only"
+    ]
+  }
+}

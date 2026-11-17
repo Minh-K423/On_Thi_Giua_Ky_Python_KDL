@@ -1,0 +1,835 @@
+
+===== PDF PAGE 1 =====
+Python cho Khoa học dữ liệu
+Bài 7 — Lớp và đối tượng
+Hà Minh T uấn
+hmtuan@hcmus.edu.vn
+Khoa T oán - Tin học
+T rường Đại học Khoa học Tự nhiên
+ĐHQG, HCM
+October 28, 2026
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 1 / 46
+
+===== PDF PAGE 2 =====
+Nội dung bài học
+1 Vì sao cần lớp
+2 Lớp đầu tiên và __init__
+3 Phương thức và self
+4 Nhiều đối tượng cùng một lớp
+5 Từ đặc tả đến lớp
+6 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 2 / 46
+
+===== PDF PAGE 3 =====
+Roadmap
+1 Vì sao cần lớp
+2 Lớp đầu tiên và __init__
+3 Phương thức và self
+4 Nhiều đối tượng cùng một lớp
+5 Từ đặc tả đến lớp
+6 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 3 / 46
+
+===== PDF PAGE 4 =====
+Chương 1 gói việc; Chương 2 gói dữ liệu cùng việc
+Chương 1: mỗi việc là một hàm. Dữ liệu thì nằm rời trong tuple, dict, và được chuyền
+tay từ hàm này sang hàm khác.
+Khi chương trình lớn dần, câu hỏi chuyển thành: dữ liệu này thuộc về ai, và những việc
+nào được phép làm trên nó?
+Lớp (class) trả lời câu hỏi đó: gói dữ liệu và những việc làm trên dữ liệu vào cùng
+một chỗ.
+Yêu cầu sau bài này
+Viết được một lớp có __init__ và vài phương thức; giải thích được self là gì bằng
+cách truy vết một lời gọi; tạo và dùng nhiều đối tượng của cùng một lớp; nhận ra bốn
+cạm bẫy im lặng khi viết lớp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 4 / 46
+
+===== PDF PAGE 5 =====
+Cách cũ 1: bản ghi là một tuple
+sv = ("Nguyen Van An", "24TTH", 8.5)
+print(sv[0], "-", sv[2])
+# o mot tep khac, ai do tao ban ghi theo thu tu khac
+sv2 = ("24TTH", "Tran Thi Binh", 7.0)
+print(sv2[0], "-", sv2[2])
+Kết quả
+Nguyen Van An - 8.5
+24TTH - 7.0
+sv[2] là điểm hay lớp? Phải nhớ thứ tự — con số 2 không nói
+gì cả.
+Dòng thứ hai in ra lớp thay cho tên, và Python không báo gì.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 5 / 46
+
+===== PDF PAGE 6 =====
+Cách cũ 2: bản ghi là một dict
+sv = {"ten": "Nguyen Van An", "lop": "24TTH", "diem": [8.5]}
+sv["deim"] = [9.0] # go nham ten khoa
+print(sv["diem"])
+print(len(sv))
+Kết quả
+[8.5]
+4
+Có tên, dễ đọc hơn tuple. Nhưng gõ nhầm khoá thì dict lặng lẽ
+thêm khoá mới : điểm 9.0 nằm ở "deim", điểm thật vẫn là
+[8.5].
+Hàm diem_tb(sv) nằm ở một chỗ khác; không gì ràng nó với
+dict này .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 6 / 46
+
+===== PDF PAGE 7 =====
+Đối tượng đã có mặt từ Bài 2
+ten = "nguyen van an"
+print(type(ten), ten.title())
+ds = [8.5, 4.0]
+ds.append(9.0)
+print(type(ds), ds)
+print(isinstance(ds, list))
+Kết quả
+<class 'str'> Nguyen Van An
+<class 'list'> [8.5, 4.0, 9.0]
+True
+"nguyen van an" là một đối tượng của lớp str;
+.title() là một phương thức của lớp đó.
+ds là đối tượng của lớp list; nó mang theo dữ liệu
+(các số) và việc làm được trên dữ liệu ( append,
+sort, …).
+Bài này viết lấy một lớp như thế.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 7 / 46
+
+===== PDF PAGE 8 =====
+Lớp là khuôn, đối tượng là thứ đúc ra từ khuôn
+lớp SinhVien
+thuộc tính: ten, lop, diem
+phương thức: them_diem(), diem_tb()
+đối tượng a
+ten = "Nguyen Van An"
+lop = "24TTH"
+diem = [8.5, 6.0]
+đối tượng b
+ten = "Tran Thi Binh"
+lop = "25KDL"
+diem = []
+lớp (class) bản mô tả: một đối tượng loại này có những dữ liệu gì, làm
+được gì
+đối tượng , thể hiện một “cá thể” cụ thể tạo từ lớp; mỗi cái giữ dữ liệu riêng
+thuộc tính (attribute) dữ liệu gắn với đối tượng: a.ten, a.diem
+phương thức (method) hàm định nghĩa trong lớp, gọi qua đối tượng: a.diem_tb()
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 8 / 46
+
+===== PDF PAGE 9 =====
+Roadmap
+1 Vì sao cần lớp
+2 Lớp đầu tiên và __init__
+3 Phương thức và self
+4 Nhiều đối tượng cùng một lớp
+5 Từ đặc tả đến lớp
+6 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 9 / 46
+
+===== PDF PAGE 10 =====
+Lớp nhỏ nhất có thể viết
+class SinhVien:
+pass
+a = SinhVien()
+b = SinhVien()
+print(type(a))
+print(a is b)
+print(a)
+Kết quả
+<class '__main__.SinhVien'>
+False
+<__main__.SinhVien object at
+0x0000019A4D21B3D0>,→
+class Ten: định nghĩa lớp. Tên lớp viết hoa chữ
+đầu mỗi từ : SinhVien, ThongKeChay.
+Gọi tên lớp như gọi hàm, SinhVien(), là tạo một
+đối tượng mới . Hai lần gọi, hai đối tượng khác
+nhau.
+print(a) mới chỉ in được địa chỉ (khác nhau mỗi
+lần chạy). Bài 10 sẽ sửa chỗ này .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 10 / 46
+
+===== PDF PAGE 11 =====
+Gắn thuộc tính từ bên ngoài: chạy được, nhưng không nên
+class SinhVien:
+pass
+a = SinhVien()
+a.ten = "An"
+a.lop = "24TTH"
+b = SinhVien()
+b.ten = "Binh" # quen gan lop
+print(a.ten, a.lop)
+print(b.ten, b.lop)
+Kết quả
+An 24TTH
+Traceback (most recent call last):
+...
+AttributeError: 'SinhVien' object has no
+attribute 'lop',→
+Mỗi đối tượng có thể mang một bộ thuộc
+tính khác nhau, tuỳ người dùng nhớ gán gì.
+T a muốn một lời hứa: mọi SinhVien vừa
+sinh ra đều có đủ ten, lop, diem. Lời hứa
+đó là __init__.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 11 / 46
+
+===== PDF PAGE 12 =====
+Phương thức khởi tạo __init__
+class SinhVien:
+def __init__(self, ten, lop):
+self.ten = ten
+self.lop = lop
+self.diem = []
+a = SinhVien("Nguyen Van An", "24TTH")
+b = SinhVien("Tran Thi Binh", "25KDL")
+print(a.ten, "|", a.lop, "|", a.diem)
+print(b.ten, "|", b.lop, "|", b.diem)
+print(vars(a))
+Kết quả
+Nguyen Van An | 24TTH | []
+Tran Thi Binh | 25KDL | []
+{'ten': 'Nguyen Van An', 'lop': '24TTH',
+'diem': []},→
+__init__ chạy tự động mỗi khi tạo đối
+tượng. Các đối số trong SinhVien(...)
+được chuyển vào nó.
+self.ten = ten : gắn thuộc tính ten vào
+chính đối tượng đang được tạo . vars(a) cho
+xem mọi thuộc tính của a.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 12 / 46
+
+===== PDF PAGE 13 =====
+T ruy vết:a = SinhVien("Nguyen Van An", "24TTH")
+1 Python tạo một đối tượng rỗng thuộc lớp
+SinhVien.
+2 Gọi SinhVien.__init__(đối tượng đó ,
+"Nguyen Van An", "24TTH") . Tham số
+self nhận chính đối tượng rỗng ấy .
+3 Ba lệnh gán gắn ten, lop, diem vào đối
+tượng.
+4 __init__ kết thúc; biểu thức SinhVien(...)
+có giá trị là đối tượng đã đủ thuộc tính.
+5 Tên a được gắn vào đối tượng đó.
+Kiem chung buoc 2
+class Demo:
+def __init__(self):
+print("trong:", id(self))
+d = Demo()
+print("ngoai:", id(d))
+Kết quả
+trong: 1737298394192
+ngoai: 1737298394192
+Cùng một id: self bên trong và d bên ngoài là
+một đối tượng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 13 / 46
+
+===== PDF PAGE 14 =====
+Cùng một đối tượng, hai cái tên ở hai nơi
+một đối tượng SinhVien
+ten = "Nguyen Van An"
+lop = "24TTH"
+diem = []
+self
+trong __init__
+a
+ngoài, sau khi tạo xong
+id(self) và id(a)
+cho cùng một số
+Chỉ có một đối tượng: self là tên nó mang khi đang ở trong __init__, a là tên ở bên ngoài.
+self hết hiệu lực khi __init__ xong, như mọi tham số. Đối tượng ở lại vì a còn giữ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 14 / 46
+
+===== PDF PAGE 15 =====
+Nhìn đối tượng từ rỗng thành đủ thuộc tính
+class SinhVien:
+def __init__(self, ten, lop):
+print("dau __init__:" , vars(self))
+self.ten = ten
+self.lop = lop
+self.diem = []
+print("cuoi __init__:", vars(self))
+a = SinhVien("Nguyen Van An", "24TTH")
+print("ben ngoai :" , vars(a))
+Kết quả
+dau __init__: {}
+cuoi __init__: {'ten': 'Nguyen Van
+An', 'lop': '24TTH', 'diem': []},→
+ben ngoai : {'ten': 'Nguyen Van
+An', 'lop': '24TTH', 'diem': []},→
+Dòng đầu in {}: lúc __init__ bắt đầu,
+đối tượng chưa có thuộc tính nào .
+Dòng ba in từ bên ngoài, giống hệt
+dòng hai: vẫn đối tượng ấy , không phải
+bản sao.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 15 / 46
+
+===== PDF PAGE 16 =====
+Hai việc Python làm ngầm, viết tay ra thì như thế này
+Voi lop SinhVien(ten, lop) o slide truoc
+b = object.__new__(SinhVien) # 1. tao doi tuong rong
+print(vars(b))
+SinhVien.__init__(b, "Tran Thi Binh", "25KDL") # 2. dien
+print(vars(b))
+print(SinhVien.__init__(b, "Le Van Chi", "25KDL"))
+Kết quả
+{}
+{'ten': 'Tran Thi Binh', 'lop': '25KDL', 'diem':
+[]},→
+None
+SinhVien(...) làm đúng hai việc
+này; object.__new__ ở đây chỉ
+để thấy tạo và điền là hai bước
+tách rời.
+__init__ không tạo và không
+trả đối tượng: dòng cuối in None.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 16 / 46
+
+===== PDF PAGE 17 =====
+self được truyền tự động — các tham số còn lại thì không
+Voi lop SinhVien(ten, lop) o slide truoc
+a = SinhVien("Nguyen Van An")
+Kết quả
+Traceback (most recent call last):
+...
+TypeError: SinhVien.__init__() missing 1 required
+positional argument: 'lop',→
+__init__ có ba tham số (self,
+ten, lop) nhưng khi tạo chỉ
+truyền hai: self do Python tự
+điền.
+Thông báo lỗi nói đúng tên tham
+số bị thiếu: 'lop'. Đọc dòng cuối
+trước.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 17 / 46
+
+===== PDF PAGE 18 =====
+__init__ là chỗ để chuẩn hoá dữ liệu
+class SinhVien:
+def __init__(self, ten, lop):
+self.ten = ten.strip().title() # chuan hoa
+self.lop = lop.strip().upper()
+self.diem = []
+a = SinhVien(" nguyen van AN " , "24tth")
+print(repr(a.ten), repr(a.lop))
+Kết quả
+'Nguyen Van An' '24TTH'
+ten (không có self.) là tham số: biến cục bộ, mất đi khi
+__init__ chạy xong.
+self.ten là thuộc tính : ở lại cùng đối tượng suốt đời nó.
+Dữ liệu vào từ tệp thường bẩn (Bài 6). Làm sạch một lần
+ở __init__, các chỗ khác không phải kiểm lại.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 18 / 46
+
+===== PDF PAGE 19 =====
+Cạm bẫy im lặng 1: giá trị mặc định chỉ được tạo một lần
+Sai: moi doi tuong dung chung
+class SinhVien:
+def __init__(self, ten, diem=[]):
+self.ten = ten
+self.diem = diem
+a = SinhVien("An")
+b = SinhVien("Binh")
+a.diem.append(9.0)
+print(b.diem)
+print(a.diem is b.diem)
+Kết quả
+[9.0]
+True
+Dung: None, roi tao list moi
+class SinhVien:
+def __init__(self, ten, diem=None):
+self.ten = ten
+if diem is None:
+diem = []
+self.diem = list(diem)
+a = SinhVien("An")
+b = SinhVien("Binh")
+a.diem.append(9.0)
+print(a.diem, b.diem)
+Kết quả
+[9.0] []
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 19 / 46
+
+===== PDF PAGE 20 =====
+Roadmap
+1 Vì sao cần lớp
+2 Lớp đầu tiên và __init__
+3 Phương thức và self
+4 Nhiều đối tượng cùng một lớp
+5 Từ đặc tả đến lớp
+6 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 20 / 46
+
+===== PDF PAGE 21 =====
+Thêm việc cho lớp: phương thức
+class SinhVien:
+"""Sinh vien va cac diem."""
+def __init__(self, ten, lop):
+self.ten = ten
+self.lop = lop
+self.diem = [] # list rieng
+def them_diem(self, d):
+self.diem.append(d)
+def diem_tb(self):
+if not self.diem:
+return 0.0
+return sum(self.diem) / len(self.diem)
+def xep_loai(self, nguong=5.0):
+if self.diem_tb() >= nguong:
+return "Dat"
+return "Chua dat"
+Phương thức là hàm viết bên trong lớp, tham số đầu tiên luôn là self.
+Chuỗi ba nháy ngay dưới class là docstring của lớp. xep_loai gọi một phương thức khác qua
+self.diem_tb().
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 21 / 46
+
+===== PDF PAGE 22 =====
+Gọi phương thức: self nhận giá trị nào
+a = SinhVien("Nguyen Van An", "24TTH")
+a.them_diem(8.5)
+a.them_diem(6.0)
+print(a.diem, a.diem_tb(), a.xep_loai())
+print(SinhVien.diem_tb(a)) # cach viet day du
+Kết quả
+[8.5, 6.0] 7.25 Dat
+7.25
+Một câu để nhớ self
+a.diem_tb() chỉ là cách viết gọn của SinhVien.diem_tb(a).
+self là đối tượng đứng trước dấu chấm .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 22 / 46
+
+===== PDF PAGE 23 =====
+self chỉ là một cái tên
+class Dem:
+def __init__(toi): # ten tuy y
+toi.n = 0
+def tang(toi):
+toi.n += 1
+d = Dem()
+d.tang() # viet gon
+Dem.tang(d) # viet day du
+print(d.n)
+print(type(d.tang), type(Dem.tang))
+Kết quả
+2
+<class 'method'> <class 'function'>
+self không phải từ khoá: đổi thành toi
+vẫn chạy . Nó chỉ là tham số thứ nhất. Mọi
+tài liệu và thư viện đều đặt tên self, nên
+vẫn viết self.
+d.tang là method: đối tượng đã gắn sẵn
+vào tham số đầu. Dem.tang chỉ là
+function, phải tự truyền đối tượng vào.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 23 / 46
+
+===== PDF PAGE 24 =====
+Hai lỗi có báo khi quên self
+Quen self trong def
+class SinhVien:
+def chao():
+print("Xin chao")
+SinhVien().chao()
+Kết quả
+TypeError: SinhVien.chao() takes 0
+positional arguments but 1 was
+given
+,→
+,→
+Python đã tự truyền đối tượng vào, nhưng def
+không có chỗ nhận.
+Quen ”self. ” khi dung thuoc tinh
+class SinhVien:
+def __init__(self, ten):
+self.ten = ten
+def chao(self):
+print("Xin chao", ten)
+SinhVien("An").chao()
+Kết quả
+NameError: name 'ten' is not defined. Did
+you mean: 'len'?,→
+Không có self., tên ten bị tìm ở ngoài lớp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 24 / 46
+
+===== PDF PAGE 25 =====
+Cạm bẫy im lặng 2: quên self. mà vẫn chạy
+Cung lop ben phai o slide truoc, trong mot notebook
+ten = "Binh" # bien sot lai tu mot o phia tren
+SinhVien("An").chao()
+Kết quả
+Xin chao Binh
+Không có self., tên ten được tìm ở bên ngoài lớp. Ở slide trước
+bên ngoài không có nên báo NameError; trong notebook còn sót
+một biến ten thì nó dùng biến đó , in sai tên, không báo gì.
+Quy tắc: trong phương thức, dữ liệu của đối tượng luôn đi qua
+self.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 25 / 46
+
+===== PDF PAGE 26 =====
+Cạm bẫy im lặng 3: gán kết quả của phương thức sửa đối tượng
+a = SinhVien("An", "24TTH")
+a = a.them_diem(9.0) # tuong la "cap nhat a"
+print(a)
+print(a.diem_tb())
+Kết quả
+None
+Traceback (most recent call last):
+...
+AttributeError: 'NoneType' object has no attribute
+'diem_tb',→
+them_diem sửa đối tượng tại chỗ
+và không return gì, nên trả None.
+Dòng 2 vứt mất sinh viên; lỗi chỉ
+hiện ra ở dòng khác .
+Giống ds = ds.sort() : phương
+thức sửa đối tượng thì gọi trơn:
+a.them_diem(9.0).
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 26 / 46
+
+===== PDF PAGE 27 =====
+Cạm bẫy im lặng 4: gõ nhầm tên thuộc tính
+class SinhVien:
+def __init__(self, ten, lop):
+self.ten = ten
+self.lop = lop
+def chuyen_lop(self, lop_moi):
+self.lpo = lop_moi # go nham!
+a = SinhVien("An", "24TTH")
+a.chuyen_lop("24KDL")
+print(a.lop)
+print(vars(a))
+Kết quả
+24TTH
+{'ten': 'An', 'lop': '24TTH', 'lpo':
+'24KDL'},→
+Gán vào tên chưa có là tạo thuộc tính
+mới — y như khoá dict ở đầu bài. Lớp
+vẫn ở 24TTH.
+Phòng: gán mọi thuộc tính trong
+__init__; nghi ngờ thì vars(a) để soi.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 27 / 46
+
+===== PDF PAGE 28 =====
+Bài tập tại lớp
+T rong lớpSinhVien ở slide “Thêm việc cho lớp”:
+1 Thêm phương thức diem_cao_nhat(), trả về điểm lớn nhất, hoặc None nếu chưa có
+điểm nào.
+2 Thêm phương thức doi_lop(lop_moi), chuẩn hoá lớp mới giống cách __init__ đã làm
+ở slide “chuẩn hoá dữ liệu” .
+3 T ạo hai sinh viên, thêm điểm cho một người, rồi in vars() của cả hai.
+Dự đoán trước khi chạy
+Ở câu 3, vars() của người không được thêm điểm có khoá diem không? Giá trị là gì?
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 28 / 46
+
+===== PDF PAGE 29 =====
+Roadmap
+1 Vì sao cần lớp
+2 Lớp đầu tiên và __init__
+3 Phương thức và self
+4 Nhiều đối tượng cùng một lớp
+5 Từ đặc tả đến lớp
+6 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 29 / 46
+
+===== PDF PAGE 30 =====
+Từ dữ liệu thô thành một danh sách đối tượng
+ds = []
+for dong in DU_LIEU.splitlines():
+ten, lop, chuoi_diem = dong.split(";")
+sv = SinhVien(ten, lop)
+for d in chuoi_diem.split(","):
+sv.them_diem(float(d))
+ds.append(sv)
+print(len(ds), type(ds[0]))
+DU_LIEU: ten;lop;cac diem
+Nguyen Van An;24TTH;8.5,7.0
+Tran Thi Binh;24TTH;4.0,5.5
+Le Van Chi;25KDL;9.0,9.5
+Pham Thu Dung;25KDL;6.5
+Kết quả
+4 <class '__main__.SinhVien'>
+Mỗi dòng thành một đối tượng; cả lớp học là
+một list các đối tượng. Bài 2 dùng list các
+tuple — giờ mỗi phần tử tự tính được điểm
+trung bình.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 30 / 46
+
+===== PDF PAGE 31 =====
+Mỗi đối tượng tự trả lời về chính nó
+for sv in ds:
+print(f"{sv.ten:<15}{sv.lop:<7}{sv.diem_tb():>5.2f} {sv.xep_loai()}")
+Kết quả
+Nguyen Van An 24TTH 7.75 Dat
+Tran Thi Binh 24TTH 4.75 Chua dat
+Le Van Chi 25KDL 9.25 Dat
+Pham Thu Dung 25KDL 6.50 Dat
+Vòng lặp không cần biết điểm được lưu
+thế nào; nó chỉ hỏi từng đối tượng.
+Muốn đổi cách tính trung bình (bỏ điểm
+thấp nhất chẳng hạn): sửa một phương
+thức, mọi chỗ gọi tự đúng theo.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 31 / 46
+
+===== PDF PAGE 32 =====
+Sắp xếp, tìm lớn nhất, tra cứu
+def lay_tb(sv):
+return sv.diem_tb()
+xep_hang = sorted(ds, key=lay_tb, reverse=True)
+print([sv.ten for sv in xep_hang])
+print(max(ds, key=lay_tb).ten)
+tra_cuu = {sv.ten: sv for sv in ds}
+print(tra_cuu["Le Van Chi"].diem)
+Kết quả
+['Le Van Chi', 'Nguyen Van An',
+'Pham Thu Dung', 'Tran Thi
+Binh']
+,→
+,→
+Le Van Chi
+[9.0, 9.5]
+key=lay_tb: sorted, max gọi hàm
+này cho từng đối tượng để biết so
+sánh theo cái gì (Bài 5).
+Dict có giá trị là đối tượng: tra theo
+tên, lấy về cả sinh viên.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 32 / 46
+
+===== PDF PAGE 33 =====
+Mỗi đối tượng một trạng thái riêng — trừ khi hai tên cùng chỉ một
+a = SinhVien("An", "24TTH")
+b = SinhVien("An", "24TTH")
+c = a
+a.them_diem(9.0)
+print(a.diem, b.diem, c.diem)
+print(a is b, a is c, a == b)
+Kết quả
+[9.0] [] [9.0]
+False True False
+a và b giống hệt nội dung nhưng là hai đối tượng: sửa a không
+đụng tới b.
+c = a không tạo đối tượng mới — đúng mô hình tham chiếu ở
+Bài 3.
+a == b ra False: mặc định == so danh tính. Bài 10 dạy cách
+định nghĩa “bằng nhau” theo nội dung.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 33 / 46
+
+===== PDF PAGE 34 =====
+T ruy vết trước khi chạy
+class Dem:
+def __init__(self):
+self.n = 0
+def tang(self):
+self.n += 1
+return self.n
+x = Dem()
+y = Dem()
+z = x
+x.tang()
+z.tang()
+y.tang()
+print(x.n, y.n, z.n, x.tang())
+Dự đoán trước khi chạy
+Dòng cuối in ra bốn số nào?
+Kẻ bảng: mỗi hàng một dòng lệnh, ba cột
+x.n, y.n, z.n. Điền giá trị sau từng dòng.
+Cẩn thận với z.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 34 / 46
+
+===== PDF PAGE 35 =====
+Đáp án
+Kết quả
+2 1 2 3
+Sau dòng x.n y.n z.n
+x = Dem(); y = Dem() 0 0 —
+z = x 0 0 0
+x.tang() 1 0 1
+z.tang() 2 0 2
+y.tang() 2 1 2
+z và x là một đối tượng, nên z.tang() cũng tăng x.n.
+Số cuối là 3: print tính các đối số từ trái sang phải; x.tang() chạy sau khi x.n đã được
+lấy ra là 2.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 35 / 46
+
+===== PDF PAGE 36 =====
+Roadmap
+1 Vì sao cần lớp
+2 Lớp đầu tiên và __init__
+3 Phương thức và self
+4 Nhiều đối tượng cùng một lớp
+5 Từ đặc tả đến lớp
+6 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 36 / 46
+
+===== PDF PAGE 37 =====
+Đặc tả: thống kê trên một dòng số
+Đặc tả
+Viết một bộ thống kê nhận từng số một (tệp quá lớn, không giữ lại cả danh sách). Bất
+cứ lúc nào cũng cho biết: đã nhận bao nhiêu số, trung bình, nhỏ nhất, lớn nhất.
+Câu hỏi thiết kế T rả lời
+Phải nhớ gì giữa hai lần nhận số? n, tong, nho_nhat, lon_nhat → thuộc tính
+Người dùng làm gì với nó? thêm một số; hỏi trung bình → phương thức
+Lúc mới tạo thì các thuộc tính bằng
+bao nhiêu?
+0, 0.0, chưa có, chưa có → __init__
+Vì sao không viết hàm? Hàm chạy xong là quên hết; muốn nhớ n, tong giữa các lần gọi phải dùng biến
+toàn cục — và không thể có hai bộ thống kê cùng lúc.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 37 / 46
+
+===== PDF PAGE 38 =====
+Lớp ThongKeChay
+class ThongKeChay:
+"""Thong ke tren dong so."""
+def __init__(self):
+self.n = 0
+self.tong = 0.0
+self.nho_nhat = None
+self.lon_nhat = None
+def them(self, x):
+self.n += 1
+self.tong += x
+if self.n == 1 or x < self.nho_nhat:
+self.nho_nhat = x
+if self.n == 1 or x > self.lon_nhat:
+self.lon_nhat = x
+def trung_binh(self):
+return self.tong / self.n
+None nghĩa là “chưa có” . Số đầu tiên (self.n == 1 ) luôn thành nhỏ nhất và lớn nhất, nên không bao
+giờ phải so sánh với None.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 38 / 46
+
+===== PDF PAGE 39 =====
+Dùng: một bộ, rồi hai bộ độc lập
+tk = ThongKeChay()
+for x in [8.5, 4.0, 9.0, 6.5]:
+tk.them(x)
+print(tk.n, tk.trung_binh(), tk.nho_nhat, tk.lon_nhat)
+tk_24tth, tk_25kdl = ThongKeChay(), ThongKeChay()
+for x in [8.5, 4.0]:
+tk_24tth.them(x)
+tk_25kdl.them(9.0)
+print(tk_24tth.trung_binh(), tk_25kdl.trung_binh())
+Kết quả
+4 7.0 4.0 9.0
+6.25 9.0
+Thống kê riêng từng lớp: tạo thêm đối tượng, lớp không đổi một dòng.
+T rạng tháisống giữa các lần gọi, đúng việc mà một hàm không làm
+được.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 39 / 46
+
+===== PDF PAGE 40 =====
+Hình dạng chung của thư viện Khoa học Dữ liệu
+class MoHinhTrungBinh:
+"""Du doan moi gia tri bang trung binh cua du lieu huan luyen."""
+def __init__(self, lam_tron=2):
+self.lam_tron = lam_tron # cau hinh: dat luc tao
+def fit(self, y):
+self.trung_binh_ = round(sum(y) / len(y), self.lam_tron)
+return self # tra lai chinh no
+def predict(self, n):
+return [self.trung_binh_] * n
+__init__ nhận cấu hình ; fit học từ dữ liệu và lưu kết quả vào thuộc tính; predict dùng thuộc
+tính đó.
+Thuộc tính học được có dấu _ ở cuối ( trung_binh_) — quy ước của scikit-learn.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 40 / 46
+
+===== PDF PAGE 41 =====
+Dùng mô hình — và khi quên fit
+m = MoHinhTrungBinh()
+m.fit([8.5, 4.0, 9.0, 6.5])
+print(m.trung_binh_)
+print(m.predict(3))
+m2 = MoHinhTrungBinh(lam_tron=0).fit([8.5, 4.0]) # nho return self
+print(m2.predict(2))
+Kết quả
+7.0
+[7.0, 7.0, 7.0]
+[6.0, 6.0]
+m = MoHinhT rungBinh(); m.predict(3)
+AttributeError: 'MoHinhTrungBinh' object has no attribute
+'trung_binh_',→
+Bài 19: LinearRegression().fit(X, y) rồi đọc .coef_ — đúng
+hình dạng này .fit trả self để viết nối được, khác them_diem trả
+None.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 41 / 46
+
+===== PDF PAGE 42 =====
+Quy ước đặt tên và docstring
+Lớp SinhVien
+Phương thức diem_tb, them
+Thuộc tính nho_nhat
+Thuộc tính học được trung_binh_
+Tham số đầu tiên luôn là self
+Tên lớp là danh từ ; tên phương thức thường là động
+từ (them, fit) hoặc thứ nó trả về ( diem_tb).
+print(SinhVien.__doc__)
+print(ThongKeChay.__doc__)
+Kết quả
+Sinh vien va cac diem.
+Thong ke tren dong so.
+help(SinhVien) in docstring của lớp và mọi
+phương thức.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 42 / 46
+
+===== PDF PAGE 43 =====
+Roadmap
+1 Vì sao cần lớp
+2 Lớp đầu tiên và __init__
+3 Phương thức và self
+4 Nhiều đối tượng cùng một lớp
+5 Từ đặc tả đến lớp
+6 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 43 / 46
+
+===== PDF PAGE 44 =====
+Cú pháp của cả bài — một trang
+Muốn Viết
+Định nghĩa lớp class SinhVien: """docstring"""
+Khởi tạo thuộc tính def __init__(self, ten, lop): self.ten = ten
+Mặc định là list def __init__(self, diem=None): if diem is None: diem =
+[]
+Phương thức def diem_tb(self): … return ...
+T ạo đối tượng a = SinhVien("An", "24TTH")
+Đọc, gán thuộc tính a.ten a.lop = "24KDL"
+Gọi phương thức a.diem_tb() (≡ SinhVien.diem_tb(a))
+Gọi phương thức khác bên
+trong lớp
+self.diem_tb()
+Soi đối tượng type(a) vars(a) a is b help(SinhVien)
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 44 / 46
+
+===== PDF PAGE 45 =====
+Bốn cạm bẫy im lặng trong bài này
+Việc làm Hỏng thế nào
+def __init__(self, diem=[]) mọi đối tượng dùng chung một list
+Quên self. khi đọc thuộc tính dùng nhầm biến bên ngoài nếu tình cờ trùng tên
+a = a.them_diem(9.0) a thành None, lỗi hiện ra ở dòng khác
+Gõ nhầm self.lpo = ... tạo thuộc tính mới, thuộc tính thật không đổi
+Còn các lỗi này thì có báo Dòng cuối của thông báo
+Quên self trong def TypeError: ...takes 0 positional arguments but 1
+was given
+Thiếu đối số khi tạo TypeError: ...missing 1 required positional
+argument
+Đọc thuộc tính chưa gán AttributeError: ... object has no attribute ...
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 45 / 46
+
+===== PDF PAGE 46 =====
+Chuẩn bị cho bài 8
+Doan ma nay in ra gi, vi sao?
+class Lop:
+danh_sach = [] # o cap lop
+def them(self, ten):
+self.danh_sach.append(ten)
+a = Lop()
+b = Lop()
+a.them("An")
+print(b.danh_sach)
+Bài 8 — Thuộc tính, phương thức và
+quan hệ giữa các lớp : thuộc tính của lớp so
+với của thể hiện; một chương trình gồm nhiều
+lớp cộng tác.
+TH5 (tuần 6): viết lớp đầu tiên từ đặc tả cho
+sẵn.
+Đọc trước: Python T utorial, mục 9 “Classes”
+(9.3); Downey ,Think Python 2nd ed., chương
+15–17.
+Câu hỏi?
+Hà Minh T uấn — hmtuan@hcmus.edu.vn
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 7 October 28, 2026 46 / 46

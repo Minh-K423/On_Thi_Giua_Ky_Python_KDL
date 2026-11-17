@@ -1,0 +1,541 @@
+
+===== PDF PAGE 1 =====
+Python cho Khoa học dữ liệu
+Bài 3 — Biến, kiểu dữ liệu và mô hình đối tượng
+Hà Minh T uấn
+hmtuan@hcmus.edu.vn
+Khoa T oán - Tin học
+T rường Đại học Khoa học Tự nhiên
+ĐHQG, HCM
+September 15, 2026
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 1 / 43
+
+===== PDF PAGE 2 =====
+Nội dung bài học
+1 Vì sao bài này tồn tại
+2 Biến và phép gán
+3 Kiểu dữ liệu và ép kiểu
+4 Chuỗi và định dạng chuỗi
+5 Khả biến và bất biến
+6 Ba mức sao chép
+7 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 2 / 43
+
+===== PDF PAGE 3 =====
+Roadmap
+1 Vì sao bài này tồn tại
+2 Biến và phép gán
+3 Kiểu dữ liệu và ép kiểu
+4 Chuỗi và định dạng chuỗi
+5 Khả biến và bất biến
+6 Ba mức sao chép
+7 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 3 / 43
+
+===== PDF PAGE 4 =====
+Một lỗi không hề báo lỗi
+Hai dòng dưới đây trông vô hại. Hãy đọc kỹ trước khi lật slide sau.
+a = [1, 2, 3]
+b = a
+b.append(4)
+print(a)
+Dự đoán trước khi chạy
+Câu lệnh cuối in ra gì? [1, 2, 3] hay [1, 2, 3, 4] ?
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 4 / 43
+
+===== PDF PAGE 5 =====
+Kết quả
+Kết quả
+[1, 2, 3, 4]
+T a chỉ đụng vào b, nhưng a cũng đổi theo.
+Không có thông báo lỗi nào. Chương trình chạy tiếp, cho ra một kết quả trông hợp lệ.
+Vì sao đây là bài của tuần thứ hai
+Đây không phải chuyện lý thuyết ngôn ngữ. Mọi lỗi khó tìm trong mười ba tuần còn lại
+đều quay về đúng câu chuyện này . Học nó bây giờ thì cả học kỳ sau có một khung để
+giải thích; học nó ở tuần 14 thì đã muộn.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 5 / 43
+
+===== PDF PAGE 6 =====
+Bài này gồm bốn phần
+1 Biến và phép gán — viết b = a thì Python thật sự làm gì.
+2 Kiểu dữ liệu và ép kiểu — bốn kiểu cơ bản, chuyển qua lại giữa chúng, và ba chỗ
+chuyển sai mà không báo lỗi.
+3 Chuỗi và định dạng chuỗi — công cụ dùng nhiều nhất khi đọc dữ liệu thô và khi in kết
+quả.
+4 Khả biến và ba mức sao chép — vì sao ví dụ đầu bài lại như vậy , và làm sao có một
+bản sao thật.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 6 / 43
+
+===== PDF PAGE 7 =====
+Roadmap
+1 Vì sao bài này tồn tại
+2 Biến và phép gán
+3 Kiểu dữ liệu và ép kiểu
+4 Chuỗi và định dạng chuỗi
+5 Khả biến và bất biến
+6 Ba mức sao chép
+7 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 7 / 43
+
+===== PDF PAGE 8 =====
+Biến trong Python là cái nhãn, không phải cái hộp
+Hình dung quen thuộc (sai)
+Biến là một cái hộp có sẵn.
+Gán là đổ giá trị vào hộp.
+b = a nghĩa là chép nội dung hộp a sang
+hộp b.
+Cách Python thật sự làm
+Giá trị là một đối tượng nằm đâu đó trong
+bộ nhớ.
+Biến là một cái nhãn dán lên đối tượng đó.
+b = a nghĩa là dán thêm một nhãn nữa lên
+cùng đối tượng.
+Ghi nhớ
+Người học lập trình từ C hay Pascal mang theo hình dung bên trái. Đó là nguồn gốc của
+gần như mọi lỗi khó tìm trong Python.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 8 / 43
+
+===== PDF PAGE 9 =====
+Ba dạng phép gán cần biết
+a = 5
+a = a + 1 # ve phai tinh truoc, roi dan lai nhan a
+x, y = 1, 2 # gan nhieu bien cung luc
+x, y = y, x # hoan doi, khong can bien tam
+Kết quả
+a = 6
+x, y = 1 2
+sau khi hoan doi: x, y = 2 1
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 9 / 43
+
+===== PDF PAGE 10 =====
+Kiểm chứng bằng id() và is
+id() trả về số định danh của một đối tượng; hai id bằng nhau nghĩa là cùng một đối tượng.
+a = [1, 2, 3]
+b = a
+print(id(a) == id(b))
+c = [1, 2, 3, 4]
+print(a == c, a is c)
+Kết quả
+True
+True False
+Ghi nhớ
+== hỏi nội dung có giống nhau không ; is hỏi có phải cùng một đối tượng không .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 10 / 43
+
+===== PDF PAGE 11 =====
+Dùng is đúng chỗ
+Đừng dùng is để so sánh giá trị
+Với số nhỏ nó thường ra đúng do Python dùng lại đối tượng có sẵn, rồi bỗng sai với số
+lớn. Một lỗi chạy đúng chín lần rồi sai lần thứ mười là lỗi tệ nhất.
+Chi dung is voi ba gia tri nay
+if x is None:
+...
+if co_du_lieu is True:
+...
+None, True, False là những đối tượng duy nhất trong cả chương trình, nên is luôn đúng
+với chúng.
+Mọi trường hợp khác: dùng ==.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 11 / 43
+
+===== PDF PAGE 12 =====
+Đặt tên biến
+Quy tắc Ví dụ
+Chữ thường, các từ nối bằng gạch
+dưới
+diem_trung_binh, so_sinh_vien
+Bắt đầu bằng chữ cái hoặc gạch dưới _tam được, 1diem không được
+Không trùng từ khoá của Python class, for, lambda không dùng được
+Không đặt tên trùng hàm dựng sẵn đặt list = [...] là mất hàm list()
+Tên biến là tài liệu rẻ nhất
+d và diem_trung_binh chạy nhanh như nhau. Cái thứ hai giúp người đọc — kể cả chính
+mình ba tháng sau — không phải dò ngược lên đầu tệp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 12 / 43
+
+===== PDF PAGE 13 =====
+Roadmap
+1 Vì sao bài này tồn tại
+2 Biến và phép gán
+3 Kiểu dữ liệu và ép kiểu
+4 Chuỗi và định dạng chuỗi
+5 Khả biến và bất biến
+6 Ba mức sao chép
+7 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 13 / 43
+
+===== PDF PAGE 14 =====
+Bốn kiểu cơ bản
+for v in (42, 3.14, "An", True):
+print(v, "->", type(v).__name__)
+Kết quả
+42 -> int
+3.14 -> float
+An -> str
+True -> bool
+Không phải khai báo kiểu. Python tự suy ra từ giá trị được gán.
+Nhưng kiểu vẫn tồn tại và vẫn quyết định mọi phép toán — chỉ là nó vô hình.
+type() là cách hỏi thẳng khi nghi ngờ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 14 / 43
+
+===== PDF PAGE 15 =====
+Ép kiểu: chuyển qua lại giữa các kiểu
+int("42") # 42
+float("3.14") # 3.14
+str(42) # '42'
+int(3.9) # 3
+int() cắt phần thập phân, không làm tròn
+int(3.9) cho 3, không phải 4. Muốn làm tròn thì dùng round(3.9), cho 4.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 15 / 43
+
+===== PDF PAGE 16 =====
+Khi ép kiểu thất bại
+int("8.5")
+Kết quả
+ValueError: invalid literal for int() with base 10: '8.5'
+Phai qua hai buoc
+int(float("8.5")) # 8
+Ghi nhớ
+int() chỉ đọc được chuỗi số nguyên. Đây là lỗi rất hay gặp khi đọc cột điểm từ một tệp
+CSV — nhưng ít nhất nó có báo lỗi. Hai slide sau là loại không báo.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 16 / 43
+
+===== PDF PAGE 17 =====
+Giá trị nào được coi là “sai”
+T at ca sau gia tri nay deu cho False
+bool(0) bool(0.0) bool("")
+bool([]) bool({}) bool(None)
+Con lai deu T rue
+bool(1) # True
+bool("a") # True
+bool([0]) # True <- danh sach CO mot phan tu, phan tu do la so 0
+Ghi nhớ
+Nhờ vậy viết được if danh_sach: thay cho if len(danh_sach) > 0: . Nhưng để ý
+[0] là True: danh sách có phần tử, dù phần tử đó là số không.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 17 / 43
+
+===== PDF PAGE 18 =====
+Cạm bẫy: mọi thứ đọc từ tệp đều là chuỗi
+print("5" + "3", 5 + 3)
+print("9.0" > "31.5", 9.0 > 31.5)
+Kết quả
+53 8
+True False
+Cả hai dòng đều chạy trơn tru
+Dấu cộng giữa hai chuỗi là phép nối, không phải phép cộng. Và chuỗi so sánh theo bảng
+chữ cái: "9.0" lớn hơn "31.5" vì ký tự 9 đứng sau ký tự 3.
+Quên ép kiểu sau khi đọc tệp thì mọi con số phía sau sai, mà không có dòng lỗi nào.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 18 / 43
+
+===== PDF PAGE 19 =====
+Số thực không lưu được chính xác
+print(0.1 + 0.2)
+print(0.1 + 0.2 == 0.3)
+Kết quả
+0.30000000000000004
+False
+Máy lưu số thực theo hệ nhị phân. 0.1 trong hệ nhị phân là một số vô hạn tuần hoàn,
+nên phải cắt bớt — giống như 1/3 trong hệ thập phân.
+Sai số rất nhỏ, nhưng khác không. Và phép so sánh bằng thì không tha thứ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 19 / 43
+
+===== PDF PAGE 20 =====
+Hai quy tắc về số thực
+import math
+math.isclose(0.1 + 0.2, 0.3) # True <- so sanh so thuc bang isclose
+print(round(2.5), round(3.5)) # 2 4 <- lam tron ve SO CHAN gan nhat
+Cạm bẫy thường gặp
+round(2.5) cho 2 chứ không phải 3. Quy tắc này khác cách làm tròn học ở phổ thông,
+và là nguồn lệch số âm thầm khi cộng dồn nhiều giá trị.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 20 / 43
+
+===== PDF PAGE 21 =====
+Roadmap
+1 Vì sao bài này tồn tại
+2 Biến và phép gán
+3 Kiểu dữ liệu và ép kiểu
+4 Chuỗi và định dạng chuỗi
+5 Khả biến và bất biến
+6 Ba mức sao chép
+7 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 21 / 43
+
+===== PDF PAGE 22 =====
+Chuỗi là kiểu bất biến
+t = "abc"
+t[0] = "x"
+Kết quả
+TypeError: 'str' object does not support item assignment
+Mọi phép sửa đều tạo chuỗi MỚI
+t.replace("a", "x") cho 'xbc', nhưng t vẫn là 'abc'. Muốn giữ kết quả thì phải
+gán lại: t = t.replace(...) . Quên gán lại là lỗi thầm lặng hay gặp nhất với chuỗi.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 22 / 43
+
+===== PDF PAGE 23 =====
+Năm thao tác chuỗi dùng hằng ngày
+s = " Nguyen Van An , 8.5 "
+s.strip() # bo khoang trang hai dau
+s.split(",") # cat theo dau phay
+"an".upper() # viet hoa
+"2026-09-07".replace("-", "/") # thay the
+"An" in s # co chua khong
+Kết quả
+'Nguyen Van An , 8.5'
+[' Nguyen Van An ', ' 8.5 ']
+'AN'
+'2026/09/07'
+True
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 23 / 43
+
+===== PDF PAGE 24 =====
+split và strip là một cặp
+Chú ý ở slide trước: split giữ nguyên khoảng trắng trong từng mảnh.
+[p.strip() for p in s.split(",")]
+Kết quả
+['Nguyen Van An', '8.5']
+Ghi nhớ
+Đọc một dòng dữ liệu thô gần như luôn là hai bước: cắt bằng split, rồi làm sạch từng
+mảnh bằng strip. Bỏ bước thứ hai thì so sánh chuỗi sẽ sai vì thừa khoảng trắng — lại
+một lỗi không báo lỗi.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 24 / 43
+
+===== PDF PAGE 25 =====
+f-string: cách ghép chuỗi nên dùng
+ten, diem = "An", 8.456
+print(f"{ten} duoc {diem}")
+Kết quả
+An duoc 8.456
+Chữ f trước dấu nháy bật chế độ này .
+T rong cặp ngoặc nhọn viết được bất kỳ biểu thức nào , không chỉ tên biến.
+So với việc cộng chuỗi bằng dấu +: ngắn hơn, không phải gọi str(), và đọc ra ngay kết
+quả sẽ trông thế nào.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 25 / 43
+
+===== PDF PAGE 26 =====
+Định dạng bên trong f-string
+diem, so = 8.456, 1234567
+f"{diem:.2f}" # lam tron hai chu so thap phan
+f"{ten:>10}|" # canh phai trong 10 o
+f"{ten:<10}|" # canh trai trong 10 o
+f"{so:,}" # dau phan cach hang nghin
+f"{0.856:.1%}" # doi sang phan tram
+Kết quả
+8.46
+An|
+An |
+1,234,567
+85.6%
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 26 / 43
+
+===== PDF PAGE 27 =====
+Vì sao dành hẳn hai slide cho định dạng
+Mọi báo cáo phân tích đều kết thúc bằng việc in ra cho người khác đọc.
+Một bảng số căn lề lệch, thừa mười hai chữ số thập phân, không có dấu phân cách hàng
+nghìn — người đọc phải căng mắt, và họ sẽ đổ lỗi cho phân tích chứ không cho cách in.
+Đây cũng là công cụ gỡ lỗi rẻ nhất: print(f"{ten}: {gia_tri}") rải trong mã tìm ra
+lỗi nhanh hơn nhiều so với đọc lại mã bằng mắt.
+Ghi nhớ
+Ba dạng đáng thuộc ngay: :.2f cho số thực, :, cho số lớn, và :>10 để căn cột.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 27 / 43
+
+===== PDF PAGE 28 =====
+Roadmap
+1 Vì sao bài này tồn tại
+2 Biến và phép gán
+3 Kiểu dữ liệu và ép kiểu
+4 Chuỗi và định dạng chuỗi
+5 Khả biến và bất biến
+6 Ba mức sao chép
+7 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 28 / 43
+
+===== PDF PAGE 29 =====
+Hai nhóm kiểu dữ liệu
+Nhóm Gồm Sửa được tại chỗ?
+Bất biến int, float, str, bool,
+tuple
+Không. Mọi “phép sửa” đều tạo đối
+tượng mới.
+Khả biến list, dict, set Được. Sửa xong vẫn là đối tượng cũ.
+Đây là chỗ quyết định
+Ví dụ đầu bài chạy như vậy vì list khả biến. Cùng đoạn mã đó viết với số nguyên hay
+chuỗi thì không có chuyện gì xảy ra.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 29 / 43
+
+===== PDF PAGE 30 =====
+Vì sao với số nguyên không có vấn đề gì
+p = 5
+q = p
+q = q + 1
+print(p, q)
+Kết quả
+5 6
+q = q + 1 không sửa số 5. Nó tính ra số 6 rồi dán lại nhãn q lên số 6.
+Nhãn p vẫn ở nguyên trên số 5.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 30 / 43
+
+===== PDF PAGE 31 =====
+Cùng dấu +=, hai hành vi khác nhau
+Voi chuoi - bat bien
+s = "abc"
+truoc = id(s)
+s += "d"
+print(truoc == id(s)) # False -> doi tuong MOI
+Voi danh sach - kha bien
+ds = [1, 2]
+truoc = id(ds)
+ds += [3]
+print(truoc == id(ds)) # True -> van doi tuong cu, sua tai cho
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 31 / 43
+
+===== PDF PAGE 32 =====
+Hậu quả khi có hai nhãn
+x = "abc" p = [1, 2]
+y = x q = p
+y += "d" q += [3]
+print(x) print(p)
+Kết quả
+abc [1, 2, 3]
+Hai đoạn viết giống hệt nhau
+Với chuỗi, biến gốc không đổi. Với danh sách, biến gốc đổi theo. Nhìn vào mã không
+phân biệt được — phải biết kiểu dữ liệu.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 32 / 43
+
+===== PDF PAGE 33 =====
+Hệ quả thực tế: hàm có thể sửa dữ liệu gốc
+def them_mot(ds):
+ds.append(1)
+return ds
+kho = [9]
+them_mot(kho)
+print(kho)
+Kết quả
+[9, 1]
+Ghi nhớ
+Hàm nhận cùng đối tượng , không phải bản sao — nên một hàm tưởng chừng chỉ tính
+toán vẫn có thể âm thầm làm hỏng dữ liệu gốc. Bài 5 sẽ quay lại chuyện này .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 33 / 43
+
+===== PDF PAGE 34 =====
+Roadmap
+1 Vì sao bài này tồn tại
+2 Biến và phép gán
+3 Kiểu dữ liệu và ép kiểu
+4 Chuỗi và định dạng chuỗi
+5 Khả biến và bất biến
+6 Ba mức sao chép
+7 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 34 / 43
+
+===== PDF PAGE 35 =====
+Mức 1 và mức 2
+b = a # Muc 1 - gan thuong: khong sao chep gi ca
+b = a.copy() # Muc 2 - sao chep nong: tao danh sach ngoai moi
+# (viet b = a[:] cung the)
+a = [1, 2, 3]
+b = a.copy()
+b.append(4)
+print(a)
+Kết quả
+[1, 2, 3]
+Với danh sách phẳng, sao chép nông là đủ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 35 / 43
+
+===== PDF PAGE 36 =====
+Nhưng dữ liệu thật thường lồng nhau
+import copy
+goc = [[1, 2], [ 3, 4]]
+gan = goc
+nong = goc.copy()
+sau = copy.deepcopy(goc)
+goc[0].append(99)
+Dự đoán trước khi chạy
+Ba biến gan, nong, sau — biến nào bị ảnh hưởng?
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 36 / 43
+
+===== PDF PAGE 37 =====
+Kết quả
+Kết quả
+gan = [[1, 2, 99], [3, 4]]
+nong = [[1, 2, 99], [3, 4]]
+sau = [[1, 2], [3, 4]]
+Sao chép nông cũng bị ảnh hưởng
+.copy() tạo một danh sách ngoài mới, nhưng bên trong nó vẫn là đúng những danh
+sách con cũ — nó chép các nhãn, không chép thứ được dán nhãn.
+Sửa goc[0] là sửa đúng cái danh sách con mà nong[0] đang trỏ tới.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 37 / 43
+
+===== PDF PAGE 38 =====
+Bảng ba mức — nên thuộc
+Cách viết T ạo ra gì Dùng khi
+b = a thêm một nhãn, không có gì
+mới
+chỉ muốn gọi tên ngắn hơn
+b = a.copy() danh sách ngoài mới, ruột dùng
+chung
+dữ liệu phẳng, một tầng
+copy.deepcopy(a) bản riêng ở mọi tầng dữ liệu lồng nhau
+deepcopy không miễn phí
+Nó đi qua toàn bộ cấu trúc nên tốn thời gian và bộ nhớ tỉ lệ với kích thước dữ liệu. Với
+dữ liệu phẳng thì .copy() vừa đủ và nhanh hơn nhiều.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 38 / 43
+
+===== PDF PAGE 39 =====
+Cách quyết định trong ba giây
+1 Dữ liệu của tôi có lồng nhau không — tức bên trong có danh sách, từ điển hay đối tượng
+khác không?
+▶ Không → .copy()
+▶ Có, và tôi sẽ sửa phần bên trong → deepcopy
+2 Tôi có thật sự cần bản sao không, hay chỉ cần một cái tên ngắn hơn?
+▶ Chỉ cần tên ngắn → gán thường, và đừng sửa qua tên đó
+Ghi nhớ
+Không chắc thì dùng deepcopy. Chậm hơn một chút đổi lấy việc không phải đi tìm một
+lỗi không báo lỗi — đó là một đổi chác có lời.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 39 / 43
+
+===== PDF PAGE 40 =====
+Roadmap
+1 Vì sao bài này tồn tại
+2 Biến và phép gán
+3 Kiểu dữ liệu và ép kiểu
+4 Chuỗi và định dạng chuỗi
+5 Khả biến và bất biến
+6 Ba mức sao chép
+7 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 40 / 43
+
+===== PDF PAGE 41 =====
+Bảy câu cần mang về
+1 Biến là cái nhãn dán lên đối tượng, không phải cái hộp chứa giá trị.
+2 == so nội dung, is so đối tượng. Chỉ dùng is với None, True, False.
+3 int() cắt phần thập phân; int("8.5") báo lỗi; phải qua float() trước.
+4 Mọi thứ đọc từ tệp đều là chuỗi. Quên ép kiểu thì "9.0" > "31.5" cho True mà không
+báo gì.
+5 So sánh số thực bằng math.isclose, không bằng dấu bằng.
+6 Chuỗi bất biến : mọi phép sửa tạo chuỗi mới, phải gán lại.
+7 Ba mức sao chép: gán thường, .copy() cho dữ liệu phẳng, deepcopy cho dữ liệu lồng
+nhau.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 41 / 43
+
+===== PDF PAGE 42 =====
+Ba cạm bẫy im lặng trong bài này
+Việc làm Hỏng thế nào
+Quên ép kiểu sau khi đọc tệp mọi phép so sánh và phép cộng đều sai, không
+báo lỗi
+Sửa dữ liệu qua tham chiếu bản gốc mất, không có dấu hiệu nào
+Dùng .copy() cho dữ liệu lồng
+nhau
+tưởng đã tách, thực ra vẫn dùng chung ruột
+Ghi nhớ
+Cả ba đều cho ra kết quả trông bình thường . Đây là loại lỗi phải biết trước mới tránh
+được — đọc lại mã bao nhiêu lần cũng không tự nhìn ra.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 42 / 43
+
+===== PDF PAGE 43 =====
+Chuẩn bị cho bài 4
+Bài 4 — Rẽ nhánh và vòng lặp , tuần sau.
+Có hai thứ của bài hôm nay sẽ quay lại ngay: giá trị nào được coi là “sai” khi viết if, và
+chuyện gì xảy ra khi ta sửa một danh sách trong lúc đang duyệt nó .
+Mang theo câu hỏi: một vòng lặp xoá phần tử khỏi danh sách đang duyệt sẽ bỏ sót phần
+tử. Vì sao?
+Câu hỏi?
+Hà Minh T uấn — hmtuan@hcmus.edu.vn
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 3 September 15, 2026 43 / 43

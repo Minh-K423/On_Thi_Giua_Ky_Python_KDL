@@ -1,0 +1,2 @@
+# Core project and checker use Python 3.11+ standard library only.
+# No pip installation is needed.

@@ -1,0 +1,668 @@
+
+===== PDF PAGE 1 =====
+Python cho Khoa học dữ liệu
+Bài 1 — Hệ sinh thái Python và quy trình làm việc
+Hà Minh T uấn
+hmtuan@hcmus.edu.vn
+Khoa T oán - Tin học
+T rường Đại học Khoa học Tự nhiên
+ĐHQG, HCM
+September 15, 2026
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 1 / 50
+
+===== PDF PAGE 2 =====
+Nội dung buổi học
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 2 / 50
+
+===== PDF PAGE 3 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 3 / 50
+
+===== PDF PAGE 4 =====
+Học phần này đứng ở đâu?
+MTH10605 — Python cho Khoa học Dữ liệu , 4 tín chỉ (45 tiết lý thuyết + 30 tiết
+thực hành), 15 tuần.
+Học phần học trước: Cơ sở lập trình . T agiả định các bạn đã viết được chương trình có
+rẽ nhánh, vòng lặp và hàm.
+Học phần này không dạy lại cú pháp cơ bản. Nó bắt đầu từ đúng chỗ Cơ sở lập trình
+dừng lại.
+Câu hỏi định hướng cả học phần
+Không phải “viết chương trình này thế nào?” mà là “vì sao chương trình này chạy
+như vậy , và làm sao biết nó đúng?”
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 4 / 50
+
+===== PDF PAGE 5 =====
+Ba năng lực học phần nhắm tới
+1 Hiểu Python ở tầng mô hình dữ liệu — không chỉ thuộc cú pháp, mà dự đoán được
+kết quả và tác dụng phụ của một đoạn mã.
+2 Kỷ luật kỹ nghệ phần mềm — mã phân tích dữ liệu phải được kiểm thử, gỡ lỗi có
+phương pháp, đo hiệu năng, và chạy lại được ở máy người khác.
+3 Vòng đời dữ liệu trọn vẹn — lấy dữ liệu bẩn từ nguồn thật, làm sạch, phân tích, mô
+hình hóa, và định lượng độ tin cậy của kết luận.
+Điều học phần không làm
+Không dạy học sâu (deep learning). Đó là học phần riêng. Ở đây ta xây nền để học phần
+đó không phải dạy lại lập trình.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 5 / 50
+
+===== PDF PAGE 6 =====
+Bản đồ 15 tuần
+T uần 1–3 — Nền tảng.
+Hệ sinh thái và quy trình làm việc · mô hình dữ liệu và cấu trúc dữ liệu · tệp, CSV, JSON và biến đổi
+dữ liệu.
+T uần 4–7 — Dữ liệu bảng.
+NumPy vừa đủ · pandas · làm sạch dữ liệu thực tế và biểu thức chính quy · trực quan hóa và truyền
+đạt kết quả.
+T uần 8–10 — Mở rộng nguồn dữ liệu.
+Đọc và dùng lớp (kiểm tra giữa kỳ ở tuần 8) · thu thập từ API, HTML, SQL · NumPy nâng cao.
+T uần 11–15 — Suy luận và trách nhiệm.
+Mô phỏng và bootstrap · học máy với scikit-learn · đánh giá mô hình · đạo đức dữ liệu và tính tái lập
+· bảo vệ đồ án.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 6 / 50
+
+===== PDF PAGE 7 =====
+Chính sách sử dụng công cụ AI
+Quiz, giữa kỳ , cuối kỳ: không được dùng. Máy có kiểm soát, chỉ mở tài liệu chính thức của
+thư viện.
+Nộp mã mà bản thân không hiểu được xử lý như đạo văn .
+Lý do của chính sách này
+Công cụ AI viết mã tốt hơn phần lớn sinh viên năm hai. Thứ nó không làm thay được là chịu
+trách nhiệm khi mã sai trong môi trường thật. Học phần này chấm đúng cái nó không làm thay
+được.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 7 / 50
+
+===== PDF PAGE 8 =====
+Ba quy tắc của lớp
+1 Dự đoán trước khi chạy . Mỗi lần thấy một đoạn mã lạ, viết ra kết quả bạn nghĩ nó sẽ
+in ra, rồi mới bấm chạy . Chỗ bạn đoán sai chính là chỗ bạn đang học.
+2 Đo trước khi tối ưu. Không nói “cách này nhanh hơn” . Nói “cách này nhanh hơn 42 lần,
+đây là số đo” .
+3 Chạy được ở máy người khác. Bài nộp không tái lập được thì chưa xong, dù kết quả
+đúng.
+Hôm nay chúng ta dựng đúng hạ tầng để quy tắc thứ ba thành hiện thực.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 8 / 50
+
+===== PDF PAGE 9 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 9 / 50
+
+===== PDF PAGE 10 =====
+Vì sao khoa học dữ liệu chọn Python?
+Không phải vì Python nhanh. Python thuần chậm hơn C khoảng hai đến ba bậc độ lớn.
+Mà vì Python là lớp keo tốt: cú pháp gần với cách diễn đạt bài toán, lại gọi được xuống
+các thư viện viết bằng C và Fortran đã tối ưu hàng chục năm.
+NumPy , pandas, scikit-learn — phần lõi tính toán không chạy bằng Python. Python chỉ
+điều phối.
+Hệ quả trực tiếp cho cách bạn viết mã
+Viết vòng lặp Python trên hàng triệu phần tử là đang bỏ phí lớp C bên dưới. Đây là bài
+học trọng tâm của tuần 4 và tuần 10.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 10 / 50
+
+===== PDF PAGE 11 =====
+Phân biệt: ngôn ngữ, cài đặt, môi trường
+Python là một đặc tả ngôn ngữ .
+CPython là bản cài đặt phổ biến nhất — cái bạn tải về từ python.org. Còn có PyPy ,
+Jython, MicroPython.
+Môi trường là tập hợp: một bản thông dịch cụ thể + các gói đã cài + phiên bản của
+chúng.
+Khi chạy một tệp .py, CPython không thông dịch từng dòng văn bản. Nó:
+1 biên dịch mã nguồn sang bytecode (các tệp trong thư mục __pycache__);
+2 chạy bytecode đó trên máy ảo Python .
+Vì sao bạn cần biết điều này
+Thư mục __pycache__ là kết quả sinh ra tự động. Không cần mở, không được sửa, và
+xoá đi thì lần chạy sau Python tự tạo lại.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 11 / 50
+
+===== PDF PAGE 12 =====
+Bản đồ hệ sinh thái sẽ dùng trong học phần
+T ầng Thư viện T uần
+Tính toán số NumPy 4, 10
+Dữ liệu bảng pandas 4, 5
+Làm sạch, văn bản pandas, re 6
+T rực quan hóa Matplotlib, seaborn 7
+Thống kê, mô phỏng NumPy random, SciPy 11
+Học máy scikit-learn 12, 13
+Thu thập dữ liệu requests, BeautifulSoup, sqlite3 9
+Môi trường, phiên bản, tái lập venv, pip, Git, ruff 1, 14
+Hai dòng cuối bảng chính là nội dung hôm nay và tuần 14. Chúng không xuất hiện trong hình vẽ nào
+về khoa học dữ liệu, nhưng thiếu chúng thì mọi thứ phía trên không tái lập được.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 12 / 50
+
+===== PDF PAGE 13 =====
+Phiên bản Python
+Học phần dùng Python 3.11 trở lên . Không dùng Python 2 (đã ngừng hỗ trợ).
+Kiểm tra phiên bản đang chạy:
+python --version
+python -c "import sys; print(sys.version)"
+T rên Windows, nếu lệnh python không nhận, thử py -3 (Python launcher).
+Cạm bẫy thường gặp
+T rên nhiều máy cónhiều bản Python cùng tồn tại: bản của hệ điều hành, bản Anaconda,
+bản cài từ Microsoft Store. Cài gói vào bản này rồi chạy bằng bản kia là nguyên nhân số
+một của lỗi ModuleNotFoundError.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 13 / 50
+
+===== PDF PAGE 14 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 14 / 50
+
+===== PDF PAGE 15 =====
+Bốn chế độ, bốn mục đích khác nhau
+Chế độ Dùng để Lưu lại được?
+REPL (python) thử một biểu thức trong 5 giây Không
+Script (python bai.py) chạy lại một quy trình cố định Có
+IPython khám phá tương tác, tra cứu nhanh Một phần
+Jupyter Notebook khám phá dữ liệu, kể chuyện phân tích Có
+Cả bốn đều chạy cùng một Python. Khác nhau ở cách bạn tương tác và cái gì được lưu lại .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 15 / 50
+
+===== PDF PAGE 16 =====
+Chế độ 1 — REPL
+REPL = Read – Eval – Print – Loop.
+$ python
+>>> 2 ** 10
+1024
+>>> ten = "Khoa hoc du lieu"
+>>> len(ten)
+16
+>>> exit()
+T rong REPL, giá trị của biểu thức được in ra tự động . T rong script thì không — phải gọi
+print().
+Dùng REPL để trả lời câu hỏi nhỏ: “hàm này trả về gì nhỉ?”
+Mọi thứ gõ trong REPL biến mất khi thoát. Đừng làm bài tập ở đây .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 16 / 50
+
+===== PDF PAGE 17 =====
+Chế độ 2 — Script
+chao.py
+def chao(ten):
+return f"Xin chao, {ten}!"
+if __name__ == "__main__":
+print(chao("Khoa hoc du lieu"))
+python chao.py
+Khối if __name__ == "__main__": chỉ chạy khi tệp được gọi trực tiếp , không chạy khi
+tệp được import từ nơi khác.
+Nhờ nó, một tệp vừa là chương trình chạy được, vừa là mô-đun tái sử dụng được. T a
+dùng lại ý này ở tuần 8.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 17 / 50
+
+===== PDF PAGE 18 =====
+Chạy mô-đun bằng python -m
+python -m venv .venv # goi mo-dun venv
+python -m pip install pandas # goi pip cua DUNG ban Python nay
+python -m pytest # goi pytest cua dung moi truong nay
+Một mẹo đáng nhớ cả đời
+Luôn viết python -m pip thay vì pip. Lệnh pip trần có thể trỏ tới một bản Python
+khác với bản bạn đang chạy . python -m pip thì chắc chắn cài vào đúng bản Python
+vừa gõ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 18 / 50
+
+===== PDF PAGE 19 =====
+Chế độ 3 và 4 — IPython và Jupyter
+IPython là một REPL tốt hơn: tự hoàn thành bằng phím T ab, lịch sử lệnh, và các lệnh
+ma thuật.
+pip install ipython jupyterlab
+ipython
+In [1]: len? # xem tai lieu cua len
+In [2]: %timeit sum(range(1000)) # do thoi gian
+In [3]: %pwd # thu muc hien tai
+Jupyter Notebook / JupyterLab chạy IPython bên trong trình duyệt, xen kẽ mã, kết
+quả, hình vẽ và văn bản giải thích trong cùng một tệp .ipynb.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 19 / 50
+
+===== PDF PAGE 20 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 20 / 50
+
+===== PDF PAGE 21 =====
+Bài toán: hai dự án trên cùng một máy
+Đồ án A viết năm ngoái, chạy đúng với pandas 1.5.
+Đồ án B tuần này cần pandas 2.2 vì dùng một hàm mới.
+Bạn cài pandas 2.2. Đồ án A gãy . Bạn hạ xuống 1.5. Đồ án B gãy .
+Cài gói ở chế độ toàn cục
+Chỉ có một không gian gói dùng chung cho mọi dự án. Mọi dự án tranh nhau cùng một
+phiên bản. Đây là tình trạng mặc định nếu bạn không làm gì.
+Lời giải: mỗi dự án một môi trường ảo riêng — một thư mục chứa bản Python và bộ gói của
+riêng dự án đó.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 21 / 50
+
+===== PDF PAGE 22 =====
+T ạo và kích hoạt môi trường ảo
+T ạo (chỉ làm một lần cho mỗi dự án)
+cd duong/dan/toi/du-an
+python -m venv .venv
+Kích hoạt - chọn đúng dòng cho hệ điều hành của bạn
+.venv\Scripts\Activate.ps1 # Windows PowerShell
+.venv\Scripts\activate.bat # Windows Command Prompt
+source .venv/bin/activate # macOS / Linux
+Sau khi kích hoạt, dấu nhắc lệnh có tiền tố (.venv). Thoát bằng lệnh deactivate.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 22 / 50
+
+===== PDF PAGE 23 =====
+Kiểm chứng: bạn đang ở môi trường nào?
+Đừng tin dấu nhắc lệnh. Hãy hỏi thẳng Python:
+import sys
+print(sys.executable) # duong dan toi ban Python dang chay
+print(sys.prefix) # thu muc goc cua moi truong
+Kết quả mong đợi khi đã kích hoạt đúng
+F:\du-an-python\.venv\Scripts\python.exe
+F:\du-an-python\.venv
+Ghi nhớ
+Nếu đường dẫn không chứa .venv của dự án, bạn đang cài gói vào nhầm chỗ. Mọi lỗi
+“đã cài rồi mà vẫn báo không tìm thấy” đều bắt đầu từ đây .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 23 / 50
+
+===== PDF PAGE 24 =====
+Ghi lại phụ thuộc: requirements.txt
+Cài gói vào môi trường đang kích hoạt
+python -m pip install numpy pandas matplotlib jupyterlab
+Xuất danh sách gói kèm phiên bản chính xác
+python -m pip freeze > requirements.txt
+Người khác dựng lại đúng môi trường của bạn
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+Ba lệnh cuối chính là thứ biến “chạy được trên máy tôi” thành “chạy được trên máy bất kỳ” .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 24 / 50
+
+===== PDF PAGE 25 =====
+Vì sao phải ghim phiên bản
+requirements.txt - dang tot
+numpy==2.1.3
+pandas==2.2.3
+matplotlib==3.9.2
+requirements.txt - dang rui ro
+numpy
+pandas
+matplotlib
+Dạng thứ hai luôn cài bản mới nhất tại thời điểm cài . Sáu tháng sau, cùng một tệp cho ra một
+môi trường khác — kết quả phân tích có thể đổi mà không ai biết vì sao.
+Ghim phiên bản là điều kiện cần của tính tái lập , và là một tiêu chí chấm điểm đồ án.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 25 / 50
+
+===== PDF PAGE 26 =====
+venv, conda hay uv?
+Công cụ Mạnh ở Nên dùng khi
+venv + pip có sẵn, chuẩn, nhẹ mặc định của học phần này
+conda cài được cả thư viện C, R môi trường khoa học phức tạp
+uv nhanh hơn pip rất nhiều dự án lớn, cài lại nhiều lần
+Học phần dùng venv + pip vì đó là công cụ chuẩn, có sẵn trong mọi bản Python, không cần cài
+thêm gì.
+Nếu bạn đã quen Anaconda, cứ dùng, nhưng đừng trộn conda install và pip install trong
+cùng một môi trường — hai bộ quản lý sẽ ghi đè lên nhau.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 26 / 50
+
+===== PDF PAGE 27 =====
+Dự đoán trước khi chạy
+Dự đoán trước khi chạy
+Bạn mở terminal mới, chưa kích hoạt môi trường ảo, và gõ ba lệnh sau. Điều gì xảy ra
+ở lệnh thứ ba?
+cd du-an
+python -m pip install pandas
+python -c "import pandas; print(pandas.__file__)"
+Lệnh chạy thành công — nhưng pandas được cài vào Python toàn cục, không phải vào
+.venv của dự án.
+Đường dẫn in ra sẽ không chứa .venv. Bạn vừa làm bẩn môi trường toàn cục.
+Bài học: kích hoạt trước, cài sau . Và luôn kiểm chứng bằng sys.executable.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 27 / 50
+
+===== PDF PAGE 28 =====
+Dự đoán trước khi chạy
+Dự đoán trước khi chạy
+Bạn mở terminal mới, chưa kích hoạt môi trường ảo, và gõ ba lệnh sau. Điều gì xảy ra
+ở lệnh thứ ba?
+cd du-an
+python -m pip install pandas
+python -c "import pandas; print(pandas.__file__)"
+Lệnh chạy thành công — nhưng pandas được cài vào Python toàn cục, không phải vào
+.venv của dự án.
+Đường dẫn in ra sẽ không chứa .venv. Bạn vừa làm bẩn môi trường toàn cục.
+Bài học: kích hoạt trước, cài sau . Và luôn kiểm chứng bằng sys.executable.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 27 / 50
+
+===== PDF PAGE 29 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 28 / 50
+
+===== PDF PAGE 30 =====
+Notebook mạnh ở đâu
+Xen kẽ mã, kết quả, hình vẽ và diễn giải trong một tài liệu — lý tưởng cho khám phá dữ
+liệu và cho báo cáo .
+Chạy được từng ô, không phải chạy lại cả chương trình mỗi lần sửa một dòng — rất quan
+trọng khi nạp một bảng dữ liệu mất 40 giây .
+Hình vẽ hiện ngay bên dưới ô mã sinh ra nó.
+Đây là lý do notebook thống trị giai đoạn khám phá dữ liệu (tuần 6 và tuần 11). Nhưng nó có
+một điểm yếu chí mạng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 29 / 50
+
+===== PDF PAGE 31 =====
+Điểm yếu chí mạng: trạng thái ẩn
+Thứ tự các ô trên màn hình không nhất thiết là thứ tự bạn đã chạy chúng.
+O 1, roi O 2 - ban da chay theo thu tu nay
+x = 10
+print(x * 2) # in ra 20
+O 1 - ban quay len sua, NHUNG CHUA CHA Y LAI o 2
+x = "muoi"
+Màn hình vẫn hiện kết quả cũ 20 dưới ô 2. Người khác chạy tuần tự từ đầu lại nhận muoimuoi.
+Không có thông báo lỗi nào cả — đó mới là điều đáng sợ: kết quả đổi đi trong im lặng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 30 / 50
+
+===== PDF PAGE 32 =====
+Quy tắc dùng notebook trong học phần
+1 T rước khi nộp bất kỳ notebook nào: Kernel → Restart Kernel and Run All Cells . Nếu
+nó không chạy thông từ trên xuống, notebook đó chưa hoàn thành.
+2 Số thứ tự thực thi bên trái các ô phải là [1], [2], [3]... liên tục. Số nhảy cóc là dấu
+hiệu trạng thái ẩn.
+3 Notebook dùng để khám phá và trình bày . Mã dùng nhiều lần phải được chuyển sang
+tệp .py và import vào notebook.
+Cạm bẫy thường gặp
+Notebook không phải nơi chứa hàm và lớp của bạn. Từ tuần 8 trở đi, mã lõi nằm trong
+src/, notebook chỉ gọi nó.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 31 / 50
+
+===== PDF PAGE 33 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 32 / 50
+
+===== PDF PAGE 34 =====
+Cây thư mục chuẩn
+du-an-phan-tich/
+|-- data/
+| |-- raw/ # du lieu goc, CHI DOC, khong bao gio sua
+| `-- processed/ # du lieu da lam sach, sinh ra tu ma
+|-- notebooks/ # kham pha va bao cao (.ipynb)
+|-- src/
+| `-- mypkg/ # ma loi tai su dung (.py)
+|-- tests/ # kiem thu (tu tuan 6)
+|-- figures/ # hinh xuat ra cho bao cao
+|-- requirements.txt # phu thuoc da ghim phien ban
+|-- .gitignore
+`-- README.md
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 33 / 50
+
+===== PDF PAGE 35 =====
+Ba nguyên tắc của cấu trúc này
+1 data/raw/ là bất khả xâm phạm. Không bao giờ ghi đè lên dữ liệu gốc. Mọi biến đổi
+đọc từ raw/ và ghi ra processed/.
+2 Mọi thứ trong processed/ và figures/ phải sinh lại được bằng cách chạy mã. Nếu
+bạn không thể xóa hết chúng đi rồi tạo lại, dự án chưa tái lập được.
+3 Tách mã lõi khỏi mã thí nghiệm. src/ chứa thứ được kiểm thử và tái sử dụng;
+notebooks/ chứa thứ dùng một lần.
+Ghi nhớ
+Bài thực hành đầu tiên chính là dựng đúng cây thư mục này .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 34 / 50
+
+===== PDF PAGE 36 =====
+README tối thiểu
+Một README đạt yêu cầu trả lời được bốn câu hỏi:
+1 Dự án này làm gì? (2–3 câu)
+2 Dữ liệu lấy từ đâu, ngày nào?
+3 Cài đặt và chạy thế nào? (lệnh cụ thể, chép dán được)
+4 Kết quả chính nằm ở đâu?
+Doan quan trong nhat cua moi README
+## Cach chay
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python src/chay_phan_tich.py
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 35 / 50
+
+===== PDF PAGE 37 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 36 / 50
+
+===== PDF PAGE 38 =====
+Vì sao cần chuẩn viết mã
+Mã được đọc nhiều hơn được viết rất nhiều lần — kể cả bởi chính bạn ba tháng sau.
+PEP 8 là chuẩn phong cách chính thức của cộng đồng Python. T uân theo nó nghĩa là mã
+của bạn quen mắt với mọi người Python khác.
+T rong học phần này , phong cách mã là một phần điểm của bài thực hành.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 37 / 50
+
+===== PDF PAGE 39 =====
+Quy tắc đặt tên
+Đối tượng Quy ước Ví dụ
+Biến, hàm snake_case diem_trung_binh, doc_du_lieu()
+Lớp CapWords DataLoader, HocSinh
+Hằng UPPER_CASE MAX_ITER, DUONG_DAN_GOC
+Mô-đun chữ thường, ngắn lam_sach.py
+# Khong theo chuan
+def CalcAvg(L): return sum(L)/len(L)
+# Theo chuan PEP 8
+def tinh_trung_binh(danh_sach_diem):
+return sum(danh_sach_diem) / len(danh_sach_diem)
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 38 / 50
+
+===== PDF PAGE 40 =====
+Bố cục và thứ tự import
+# 1. Thu vien chuan cua Python
+import os
+from pathlib import Path
+# 2. Thu vien ben thu ba
+import numpy as np
+import pandas as pd
+# 3. Ma cua chinh du an
+from mypkg.lam_sach import loai_bo_trung
+Ba nhóm, cách nhau một dòng trống, đúng thứ tự trên.
+Thụt lề 4 dấu cách , không dùng tab.
+Độ dài dòng: giữ dưới 88 ký tự.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 39 / 50
+
+===== PDF PAGE 41 =====
+Để công cụ làm việc này thay bạn
+python -m pip install ruff
+ruff format . # tu dong dinh dang lai toan bo du an
+ruff check . # bao cao cac vi pham con lai
+ruff format sửa khoảng trắng, xuống dòng, dấu nháy — không cần tranh luận về
+phong cách nữa.
+ruff check phát hiện cả lỗi thật: biến khai báo mà không dùng, import thừa, so sánh
+với None sai cách.
+Ghi nhớ
+Chạy ruff format . và ruff check . trước mỗi lần nộp bài . Đến tuần 14, ta gắn
+nó vào quy trình bàn giao dự án.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 40 / 50
+
+===== PDF PAGE 42 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 41 / 50
+
+===== PDF PAGE 43 =====
+Ba nguồn tra cứu, theo thứ tự ưu tiên
+1 Tài liệu chính thức — docs.python.org, numpy.org/doc,
+pandas.pydata.org/docs. Luôn đúng với phiên bản bạn chọn.
+2 T rợ giúp ngay trong Python — help(), dir(), hoặc dấu ? trong IPython.
+3 Diễn đàn, blog, công cụ AI — nhanh nhưng không có bảo đảm . Luôn đối chiếu lại với
+nguồn 1 hoặc 2.
+Cạm bẫy thường gặp
+Câu trả lời trên mạng thường viết cho một phiên bản cũ. Hàm bị đổi tên, tham số bị bỏ.
+Tài liệu chính thức có bộ chọn phiên bản — hãy dùng nó.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 42 / 50
+
+===== PDF PAGE 44 =====
+Đọc một chữ ký hàm
+help(str.split)
+Kết quả
+split(self, /, sep=None, maxsplit=-1)
+Return a list of the substrings in the string,
+using sep as the separator string.
+sep=None — tham số có giá trị mặc định , nên có thể bỏ qua khi gọi.
+maxsplit=-1 — mặc định -1 nghĩa là “không giới hạn” .
+Dấu / — mọi tham số trước nó chỉ truyền theo vị trí , không truyền theo tên được.
+Nếu gặp dấu * — mọi tham số sau nó bắt buộc truyền theo tên.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 43 / 50
+
+===== PDF PAGE 45 =====
+Dự đoán trước khi chạy
+Dự đoán trước khi chạy
+Cho chữ ký sorted(iterable, /, *, key=None, reverse=False).
+T rong bốn lệnh dưới đây , lệnh nào chạy được, lệnh nào báo lỗi?
+sorted([3, 1, 2])
+sorted(iterable=[3, 1, 2])
+sorted([3, 1, 2], True)
+sorted([3, 1, 2], reverse=True)
+Dòng 1: chạy được .
+Dòng 2: lỗi — iterable nằm trước / nên không truyền theo tên được.
+Dòng 3: lỗi — reverse nằm sau * nên bắt buộc truyền theo tên.
+Dòng 4: chạy được .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 44 / 50
+
+===== PDF PAGE 46 =====
+Dự đoán trước khi chạy
+Dự đoán trước khi chạy
+Cho chữ ký sorted(iterable, /, *, key=None, reverse=False).
+T rong bốn lệnh dưới đây , lệnh nào chạy được, lệnh nào báo lỗi?
+sorted([3, 1, 2])
+sorted(iterable=[3, 1, 2])
+sorted([3, 1, 2], True)
+sorted([3, 1, 2], reverse=True)
+Dòng 1: chạy được .
+Dòng 2: lỗi — iterable nằm trước / nên không truyền theo tên được.
+Dòng 3: lỗi — reverse nằm sau * nên bắt buộc truyền theo tên.
+Dòng 4: chạy được .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 44 / 50
+
+===== PDF PAGE 47 =====
+Khám phá một đối tượng lạ
+import pandas as pd
+df = pd.DataFrame({"diem": [8, 5, 9]})
+type(df) # doi tuong nay thuoc lop nao?
+dir(df) # no co nhung thuoc tinh, phuong thuc nao?
+help(df.describe) # phuong thuc nay dung sao?
+T rong IPython hoặc Jupyter, gõ df.describe? cho kết quả tương tự nhưng gọn hơn.
+Gõ df. rồi bấm phím Tab để xem danh sách gợi ý .
+Ghi nhớ
+Bộ ba type — dir — help đủ để tự khám phá gần như mọi thư viện Python mà không
+cần tìm kiếm trên mạng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 45 / 50
+
+===== PDF PAGE 48 =====
+Roadmap
+1 Về học phần này
+2 Python và hệ sinh thái khoa học dữ liệu
+3 Bốn cách chạy mã Python
+4 Môi trường ảo và quản lý phụ thuộc
+5 Script hay Notebook?
+6 Cấu trúc một dự án phân tích dữ liệu
+7 PEP 8 và chất lượng mã
+8 Đọc tài liệu chính thức
+9 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 46 / 50
+
+===== PDF PAGE 49 =====
+Tóm tắt tuần 1
+Python chậm, nhưng là lớp keo tốt gọi xuống các thư viện C đã tối ưu. Điều đó quyết
+định cách ta viết mã từ tuần 4.
+python -m pip thay vì pip — để cài đúng chỗ.
+Mỗi dự án một môi trường ảo, phụ thuộc ghim phiên bản trong requirements.txt.
+Notebook để khám phá, tệp .py để chứa mã lõi. Luôn Restart and Run All trước khi nộp.
+ruff format và ruff check trước mỗi lần nộp bài.
+type — dir — help là công cụ tự học suốt đời.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 47 / 50
+
+===== PDF PAGE 50 =====
+Bài thực hành tuần 1
+1 Cài Python 3.11+, kiểm chứng bằng sys.executable.
+2 Dựng cây thư mục dự án chuẩn như slide đã trình bày .
+3 T ạo môi trường ảo, cài numpy pandas matplotlib jupyterlab ruff, xuất
+requirements.txt.
+4 Viết README.md đầy đủ bốn mục.
+5 Chạy một notebook đơn giản, kiểm tra Restart and Run All chạy thông.
+Tiêu chí đạt: giảng viên chép thư mục bài làm của bạn sang một máy trắng, làm theo
+README, và chạy được — không cần hỏi thêm câu nào.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 48 / 50
+
+===== PDF PAGE 51 =====
+Chuẩn bị cho bài 2
+Bài 2 — Cú pháp cơ bản , ngay trong tuần này: biến và kiểu dữ liệu, rẽ nhánh và vòng
+lặp, bốn cấu trúc dữ liệu, hàm, nhập/xuất.
+Bài 2 học bằng cách chạy một chương trình hoàn chỉnh trên máy của bạn, nên phải
+mang máy tính tới lớp, đã cài xong Python và VS Code.
+T ải về thư mục mot_vong_python (tệp dữ liệu, tệp .py và notebook), mở nó bằng File
+→ Open Folder trước giờ học.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 49 / 50
+
+===== PDF PAGE 52 =====
+Kết thúc buổi 1
+Câu hỏi?
+Hà Minh T uấn — hmtuan@hcmus.edu.vn
+Khoa T oán – Tin học, T rường Đại học Khoa học Tự nhiên, ĐHQG-HCM
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 1 September 15, 2026 50 / 50

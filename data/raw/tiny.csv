@@ -1,0 +1,4 @@
+﻿booking_id,player,zone,minutes,snack_vnd,paid_vnd,status,tags
+B001, Nguyễn An , pc ,60,10000,40000, completed ,solo|student
+B004,Phạm Dũng,PC,31,5000,20000,completed,solo
+B022,Đức Long,PC,0,0,0,cancelled,

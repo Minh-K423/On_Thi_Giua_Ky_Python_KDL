@@ -1,0 +1,6 @@
+summary
+find B004
+find UNKNOWN
+zone VR
+zone PC extra
+quit

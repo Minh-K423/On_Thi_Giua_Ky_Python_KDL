@@ -1,0 +1,960 @@
+
+===== PDF PAGE 1 =====
+Python cho Khoa học dữ liệu
+Bài 8 — Thuộc tính, phương thức và quan hệ giữa các lớp
+Hà Minh T uấn
+hmtuan@hcmus.edu.vn
+Khoa T oán - Tin học
+T rường Đại học Khoa học Tự nhiên
+ĐHQG, HCM
+November 8, 2026
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 1 / 49
+
+===== PDF PAGE 2 =====
+Nội dung bài học
+1 Đặt vấn đề
+2 Dữ liệu đặt ở đâu
+3 Ba loại phương thức
+4 Quy ước đóng gói
+5 Quan hệ chứa
+6 Nhiều lớp cộng tác
+7 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 2 / 49
+
+===== PDF PAGE 3 =====
+Roadmap
+1 Đặt vấn đề
+2 Dữ liệu đặt ở đâu
+3 Ba loại phương thức
+4 Quy ước đóng gói
+5 Quan hệ chứa
+6 Nhiều lớp cộng tác
+7 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 3 / 49
+
+===== PDF PAGE 4 =====
+Một lớp gói được dữ liệu, nhưng chưa gói hết
+NGUONG_DAT = 5.0 # hang so, de ngoai
+lop,→
+so_sinh_vien = 0 # bo dem, de ngoai
+lop,→
+class SinhVien:
+def __init__(self, ten, diem):
+global so_sinh_vien
+self.ten, self.diem = ten, diem
+so_sinh_vien += 1
+def diem_tb(self):
+return sum(self.diem) /
+len(self.diem),→
+def in_bao_cao(ds): # ham roi
+for sv in ds:
+print(sv.ten,
+round(sv.diem_tb(), 2)),→
+ds = [SinhVien("An", [8.5, 7.0]),
+SinhVien("Binh", [4.0, 5.5])]
+in_bao_cao(ds)
+print(so_sinh_vien, NGUONG_DAT)
+Kết quả
+An 7.75
+Binh 4.75
+2 5.0
+Lớp SinhVien lo đúng một người; hằng số, bộ đếm và việc in đều nằm ngoài lớp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 4 / 49
+
+===== PDF PAGE 5 =====
+Ba chỗ chưa ổn, và ba câu hỏi của bài
+Chỗ chưa ổn Câu hỏi
+Ngưỡng đạt và bộ đếm nằm ngoài
+lớp; ai cũng sửa được, đổi tên là
+hỏng
+Giá trị dùng chung cho mọi đối tượng thì đặt ở
+đâu?
+sv.diem.append(12.0) vẫn chạy ,
+không ai chặn
+Làm sao đánh dấu phần bên trong và canh dữ liệu
+ở cửa vào?
+Không có gì đại diện cho cả lớp học ;
+danh sách và hàm in trôi nổi
+Nhiều lớp phối hợp với nhau thế nào?
+Đích đến của bài
+Cuối bài, chương trình trên thành ba lớp: SinhVien giữ một người, LopHoc giữ cả lớp,
+BaoCao lo việc in — mỗi lớp một trách nhiệm, sửa chỗ nào gọn chỗ đó.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 5 / 49
+
+===== PDF PAGE 6 =====
+Roadmap
+1 Đặt vấn đề
+2 Dữ liệu đặt ở đâu
+3 Ba loại phương thức
+4 Quy ước đóng gói
+5 Quan hệ chứa
+6 Nhiều lớp cộng tác
+7 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 6 / 49
+
+===== PDF PAGE 7 =====
+Một list khai ngay dưới class
+Đoạn mã ở cuối Bài 7:
+class Lop:
+danh_sach = [] # o cap lop
+def them(self, ten):
+self.danh_sach.append(ten)
+a = Lop()
+b = Lop()
+a.them("An")
+print(b.danh_sach)
+print(a.danh_sach is b.danh_sach)
+Kết quả
+['An']
+True
+danh_sach khai ngay dưới class, không
+nằm trong __init__: nó thuộc về lớp,
+không thuộc về từng đối tượng.
+a.them("An") đọc self.danh_sach,
+không thấy ở đối tượng nên lấy của lớp —
+rồi append ngay vào list dùng chung ấy .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 7 / 49
+
+===== PDF PAGE 8 =====
+Dữ liệu riêng của từng đối tượng thì khai trong __init__
+class Lop:
+def __init__(self):
+self.danh_sach = [] # moi doi tuong mot list rieng
+def them(self, ten):
+self.danh_sach.append(ten)
+a, b = Lop(), Lop()
+a.them("An")
+print(a.danh_sach, b.danh_sach)
+Kết quả
+['An'] []
+Ghi nhớ
+Bản hướng đối tượng của cạm bẫy def f(ds=[]) ở Bài 5: một
+giá trị khả biến tạo một lần rồi dùng chung mãi.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 8 / 49
+
+===== PDF PAGE 9 =====
+Một lớp có hai chỗ để đặt dữ liệu
+class SinhVien:
+"""Mot sinh vien va cac diem."""
+NGUONG_DAT = 5.0 # cap lop
+so_sinh_vien = 0 # cap lop
+def __init__(self, ten, lop):
+self.ten = ten # cap the hien
+self.lop = lop
+self.diem = []
+SinhVien.so_sinh_vien += 1
+def them_diem(self, d):
+self.diem.append(d)
+def diem_tb(self):
+if not self.diem:
+return 0.0
+return sum(self.diem) / len(self.diem)
+def dat(self):
+return self.diem_tb() >=
+self.NGUONG_DAT,→
+Khai ngay dưới class là cấp lớp : một bản dùng chung. Gán qua self trong __init__ là cấp thể
+hiện: mỗi đối tượng một bản riêng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 9 / 49
+
+===== PDF PAGE 10 =====
+Nhìn thấy cả hai
+a = SinhVien("Nguyen Van An", "24TTH")
+b = SinhVien("Tran Thi Binh", "25KDL")
+print(vars(a)) # chi thuoc tinh cua the hien
+print(SinhVien.NGUONG_DAT, a.NGUONG_DAT, b.NGUONG_DAT)
+print(SinhVien.so_sinh_vien) # bo dem chung
+Kết quả
+{'ten': 'Nguyen Van An', 'lop': '24TTH', 'diem':
+[]},→
+5.0 5.0 5.0
+2
+vars(a) chỉ liệt kê thuộc tính của
+thể hiện. NGUONG_DAT không có
+trong đó, nhưng a.NGUONG_DAT
+vẫn đọc được.
+Quy tắc tìm: Python xem đối
+tượng trước , không thấy thì xem
+lớp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 10 / 49
+
+===== PDF PAGE 11 =====
+Chọn chỗ nào
+Thuộc tính của lớp Thuộc tính của thể hiện
+Khai ở đâu ngay dưới class trong __init__, qua self
+Có mấy bản một, dùng chung mỗi đối tượng một bản
+Dùng cho hằng số, cấu hình, bộ đếm dữ liệu riêng của từng đối tượng
+Đọc bằng SinhVien.NGUONG_DAT hoặc
+self.NGUONG_DAT
+self.ten
+Cẩn thận đừng để list, dict, set ở đây —
+Ghi nhớ
+Hỏi một câu là chọn được: giá trị này giống nhau cho mọi đối tượng hay khác nhau?
+Giống nhau thì đặt ở lớp, khác nhau thì đặt trong __init__.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 11 / 49
+
+===== PDF PAGE 12 =====
+Sửa ở lớp thì mọi đối tượng đổi theo
+a co diem 5.5 va 5.5; b co 8.0 va 8.0
+SinhVien.NGUONG_DAT = 6.0 # doi mot cho, moi doi tuong theo
+print(a.NGUONG_DAT, b.NGUONG_DAT)
+print(a.dat(), b.dat())
+Kết quả
+6.0 6.0
+False True
+Ngưỡng đạt là chính sách của cả môn học, không phải của riêng ai —
+nên nó thuộc về lớp. Đổi một dòng, mọi đối tượng đã tạo đều theo.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 12 / 49
+
+===== PDF PAGE 13 =====
+Cạm bẫy: gán qua self là tạo thuộc tính riêng
+a.NGUONG_DAT = 8.0 # gan vao THE HIEN, khong phai vao lop
+print(a.NGUONG_DAT, b.NGUONG_DAT, SinhVien.NGUONG_DAT)
+print(vars(a))
+del a.NGUONG_DAT # bo di thi lai thay cua lop
+print(a.NGUONG_DAT)
+Kết quả
+8.0 5.0 5.0
+{'ten': 'An', 'lop': '24TTH', 'diem': [],
+'NGUONG_DAT': 8.0},→
+5.0
+a.NGUONG_DAT = 8.0 không sửa
+thuộc tính của lớp; nó tạo một
+thuộc tính mới ở a, che mất cái
+của lớp. b không hề hay biết.
+Muốn sửa cho cả lớp thì viết thẳng
+SinhVien.NGUONG_DAT = 8.0 .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 13 / 49
+
+===== PDF PAGE 14 =====
+Đọc thì tìm cả ở lớp, ghi thì luôn ghi vào thể hiện
+Sai
+class Kho:
+so_lan = 0 # cap lop
+def nhap(self):
+self.so_lan += 1
+k1, k2 = Kho(), Kho()
+k1.nhap(); k1.nhap()
+print(k1.so_lan, k2.so_lan, Kho.so_lan)
+print(vars(k1))
+Kết quả
+2 0 0
+{'so_lan': 2}
+Dung
+class Kho:
+so_lan = 0
+def nhap(self):
+Kho.so_lan += 1 # vao LOP
+k1, k2 = Kho(), Kho()
+k1.nhap(); k2.nhap()
+print(k1.so_lan, k2.so_lan, Kho.so_lan)
+print(vars(k1))
+Kết quả
+2 2 2
+{}
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 14 / 49
+
+===== PDF PAGE 15 =====
+Luật bất đối xứng
+Viết Python làm gì
+self.X (đọc) tìm ở thể hiện trước; không có thì lấy của lớp
+self.X = v (ghi) luôn tạo hoặc sửa thuộc tính của thể hiện
+self.X += 1 là đọc rồi ghi: đọc của lớp, ghi vào thể hiện
+Lop.X = v sửa đúng thuộc tính của lớp
+Ghi nhớ
+Chính vì luật này mà __init__ của SinhVien đếm bằng SinhVien.so_sinh_vien +=
+1 chứ không phải self.so_sinh_vien += 1 : cách sau cho mỗi đối tượng một bộ đếm
+riêng, luôn dừng ở 1.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 15 / 49
+
+===== PDF PAGE 16 =====
+Roadmap
+1 Đặt vấn đề
+2 Dữ liệu đặt ở đâu
+3 Ba loại phương thức
+4 Quy ước đóng gói
+5 Quan hệ chứa
+6 Nhiều lớp cộng tác
+7 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 16 / 49
+
+===== PDF PAGE 17 =====
+@classmethod: một cách tạo đối tượng khác
+class SinhVien:
+def __init__(self, ten, lop, diem=None):
+self.ten, self.lop = ten, lop
+self.diem = [] if diem is None else list(diem)
+@classmethod
+def tu_dong(cls, dong): # "ten;lop;diem,diem"
+ten, lop, ds = dong.split(";")
+return cls(ten, lop, [float(x) for x in ds.split(",")])
+sv = SinhVien.tu_dong("Le Van Chi;24TTH;8.5,7.0")
+print(sv.ten, sv.lop, sv.diem)
+Kết quả
+Le Van Chi 24TTH [8.5, 7.0]
+Tham số đầu là cls — chính lớp đó. __init__ vẫn
+chỉ có một; mỗi dạng dữ liệu vào thêm một
+classmethod.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 17 / 49
+
+===== PDF PAGE 18 =====
+@staticmethod: hàm đặt nhờ trong lớp
+class SinhVien:
+@staticmethod
+def hop_le(diem):
+"""Khong can self: chi kiem tra mot con so."""
+return 0.0 <= diem <= 10.0
+print(SinhVien.hop_le(8.5), SinhVien.hop_le(12.0))
+Kết quả
+True False
+Loại Tham số đầu Dùng khi
+phương thức thể hiện self cần dữ liệu của một đối tượng cụ thể
+@classmethod cls cần chính lớp đó: tạo đối tượng kiểu khác
+@staticmethod không có chỉ là hàm tiện ích, gom vào lớp cho gọn
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 18 / 49
+
+===== PDF PAGE 19 =====
+Roadmap
+1 Đặt vấn đề
+2 Dữ liệu đặt ở đâu
+3 Ba loại phương thức
+4 Quy ước đóng gói
+5 Quan hệ chứa
+6 Nhiều lớp cộng tác
+7 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 19 / 49
+
+===== PDF PAGE 20 =====
+Python không khoá, Python quy ước
+class TaiKhoan:
+def __init__(self, chu):
+self.chu = chu # cong khai
+self._ma_noi_bo = 1 # quy uoc: noi
+bo,→
+self.__khoa = "abc" # bi doi ten
+t = TaiKhoan("An")
+print(t.chu, t._ma_noi_bo)
+print(t._TaiKhoan__khoa)
+print(t.__khoa)
+Kết quả
+An 1
+abc
+Traceback (most recent call last):
+...
+AttributeError: 'TaiKhoan' object
+has no attribute '__khoa',→
+Không có private như Java hay
+C++. Một gạch dưới là lời nhắn :
+việc bên trong, đừng dựa vào.
+Hai gạch dưới thì Python đổi tên
+thành _TaiKhoan__khoa: vẫn lấy
+được, chỉ là không vô tình đụng phải.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 20 / 49
+
+===== PDF PAGE 21 =====
+@property: dùng như thuộc tính, chạy như phương thức
+class SinhVien:
+def __init__(self, ten):
+self.ten = ten
+self._diem = []
+def them_diem(self, d):
+self._diem.append(d)
+@property
+def diem_tb(self):
+if not self._diem:
+return 0.0
+n = len(self._diem)
+return sum(self._diem) / n
+sv = SinhVien("An")
+sv.them_diem(8.5)
+print(sv.diem_tb) # khong co ()
+sv.them_diem(7.0)
+print(sv.diem_tb) # tinh lai
+Kết quả
+8.5
+7.75
+Không có dấu ngoặc, nhưng mỗi lần đọc là
+một lần chạy lại: thêm điểm xong, lần đọc sau
+ra số khác.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 21 / 49
+
+===== PDF PAGE 22 =====
+Hai lỗi hay gặp với @property
+Van lop SinhVien o slide truoc
+sv.diem_tb = 9.0 # gan nguoc vao
+Kết quả
+AttributeError: property 'diem_tb' of
+'SinhVien' object has no setter,→
+diem_tb tính ra từ _diem; gán thẳng vào nó thì
+Python không biết phải sửa _diem thế nào, nên
+chặn luôn.
+print(sv.diem_tb()) # them cap ngoac
+Kết quả
+TypeError: 'float' object is not callable
+Lỗi của người vừa đổi một phương thức thành
+@property mà quên bỏ cặp ngoặc ở các chỗ gọi:
+sv.diem_tb đã là một số, số thì không gọi được.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 22 / 49
+
+===== PDF PAGE 23 =====
+Dữ liệu được canh ở cửa vào
+class SinhVien:
+def __init__(self, ten):
+self.ten = ten
+self._diem = []
+def them_diem(self, d):
+if not 0.0 <= d <= 10.0:
+raise ValueError(f"diem sai: {d}")
+self._diem.append(d)
+sv = SinhVien("An")
+sv.them_diem(8.5)
+sv.them_diem(12.0)
+Kết quả
+Traceback (most recent call last):
+...
+ValueError: diem sai: 12.0
+Dữ liệu thật nằm ở _diem và lối vào duy
+nhất là them_diem, nên điểm 12 không có
+đường nào lọt vào. Để diem công khai thì
+sv.diem.append(12.0) đi thẳng qua mọi
+kiểm tra.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 23 / 49
+
+===== PDF PAGE 24 =====
+Ba mức, dùng mức nào
+Cách viết Ý nghĩa Khi nào
+ten công khai phần ai cũng được đọc và gán
+_ten nội bộ, theo quy ước chi tiết cài đặt, có thể đổi bất cứ lúc
+nào
+__ten đổi tên, tránh trùng hiếm dùng; chỉ khi sợ lớp con đặt trùng
+tên
+@property đọc như thuộc tính giá trị tính ra từ dữ liệu khác
+Ghi nhớ
+Mặc định cứ để công khai. Thêm gạch dưới khi có lý do: giá trị phải được kiểm tra trước
+khi nhận, hoặc hai thuộc tính phải luôn khớp nhau.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 24 / 49
+
+===== PDF PAGE 25 =====
+Roadmap
+1 Đặt vấn đề
+2 Dữ liệu đặt ở đâu
+3 Ba loại phương thức
+4 Quy ước đóng gói
+5 Quan hệ chứa
+6 Nhiều lớp cộng tác
+7 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 25 / 49
+
+===== PDF PAGE 26 =====
+Chưa có gì đại diện cho cả lớp học
+ma_lop = "24TTH"
+ten = ["An", "Binh", "Chi"]
+diem = [[8.5, 7.0], [4.0, 5.5],
+[9.0, 9.5]]
+def si_so(ten):
+return len(ten)
+def diem_tb(diem, i):
+return sum(diem[i]) / len(diem[i])
+del ten[1] # thoi hoc
+print(si_so(ten), len(diem))
+print(ten[1],
+round(diem_tb(diem, 1), 2))
+Kết quả
+2 3
+Chi 4.75
+ma_lop, ten, diem phải luôn đi cùng nhau,
+nhưng không có gì buộc chúng lại. Xoá một
+người khỏi ten, hai biến kia không hay biết.
+Sau khi xoá, ten[1] là Chi còn diem[1] vẫn
+là điểm của Binh: in ra 4.75 thay vì 9.25,
+không một thông báo lỗi nào.
+Mỗi hàm mới lại phải nhận đúng những biến
+ấy và tự giữ cho chúng khớp nhau.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 26 / 49
+
+===== PDF PAGE 27 =====
+Thêm một lớp học nữa là nhân đôi tất cả
+ma1 = "24TTH"
+ten1 = ["An", "Binh"]
+diem1 = [[8.5, 7.0], [4.0, 5.5]]
+ma2 = "25KDL"
+ten2 = ["Chi"]
+diem2 = [[9.0, 9.5]]
+Mỗi lớp học thêm vào là ba biến mới, và
+hàm nào cũng phải nhận đủ ba thứ theo
+đúng thứ tự. Dòng cuối ghép ten2 với
+diem1: Chi nhận trung bình của An,
+chương trình vẫn chạy bình thường.
+def bao_cao(ma, ten, diem):
+for i in range(len(ten)):
+tb = sum(diem[i]) / len(diem[i])
+print(ma, ten[i], round(tb, 2))
+bao_cao(ma1, ten1, diem1)
+bao_cao(ma2, ten2, diem2)
+bao_cao(ma2, ten2, diem1) # nham mot chu so
+Kết quả
+24TTH An 7.75
+24TTH Binh 4.75
+25KDL Chi 9.25
+25KDL Chi 7.75
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 27 / 49
+
+===== PDF PAGE 28 =====
+Dồn tất cả vào một giỏ chung
+class SinhVien:
+tat_ca = [] # gio chung
+def __init__(self, ten, lop):
+self.ten, self.lop = ten, lop
+SinhVien.tat_ca.append(self)
+SinhVien("Nguyen Van An", "24TTH")
+SinhVien("Tran Thi Binh", "24TTH")
+SinhVien("Le Van Chi", "25KDL")
+def si_so(ma): # loc tay
+return len([s for s in SinhVien.tat_ca
+if s.lop == ma])
+print(len(SinhVien.tat_ca))
+print(si_so("24TTH"), si_so("25KDL"))
+print(si_so("24tth")) # go sai mot chu
+Kết quả
+3
+2 1
+0
+Giỏ chung không phân biệt lớp nào: sĩ số của một lớp phải lọc tay , và "24tth" sai một chữ thì lớp học
+biến mất. Cũng không còn chỗ nào để giữ mã lớp, giảng viên hay sĩ số tối đa của riêng một lớp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 28 / 49
+
+===== PDF PAGE 29 =====
+Ba cách trên hỏng ở đâu
+Chỗ hỏng Khi có một lớp LopHoc
+Mã lớp và danh sách là những biến rời;
+xoá một chỗ là lệch chỉ số
+Một đối tượng giữ cả hai, và chỉ sửa được qua phương
+thức của nó
+Hàm nào cũng phải nhận ba tham số,
+đúng thứ tự
+lop.diem_tb(): dữ liệu đi theo đối tượng, không
+truyền tay
+Thêm một lớp học là thêm ba biến và một
+bản mã gần giống
+LopHoc("24TTH")và LopHoc("25KDL"): một lớp, hai
+đối tượng
+Giỏ chung: mọi câu hỏi về một lớp thành
+một vòng lọc viết tay
+Mỗi lớp học một danh sách riêng; sĩ số là
+len(self._sv)
+Ghi nhớ
+Quan hệ chứa gói những dữ liệu luôn đi liền nhau vào một đối tượng, rồi đặt các phép
+tính trên dữ liệu ấy vào chính đối tượng đó.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 29 / 49
+
+===== PDF PAGE 30 =====
+Một lớp giữ đối tượng của lớp khác
+LopHoc
+ma
+_sv = [...]
+SinhVien
+ten, lop, diem
+BaoCao
+lop_hoc
+có nhiềudùng
+Quan hệ chứa : một lớp có thuộc tính là đối tượng của lớp khác. Đọc thành lời: “một
+lớp học có nhiều sinh viên” .
+T rong mã thật, quan hệ chứa phổ biến hơn kế thừa nhiều lần. Bài 9 sẽ nói khi nào là một
+mới dùng kế thừa.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 30 / 49
+
+===== PDF PAGE 31 =====
+Lớp LopHoc
+class LopHoc:
+"""Mot lop hoc CHUA nhieu doi tuong
+SinhVien.""",→
+def __init__(self, ma):
+self.ma = ma
+self._sv = []
+# danh sach noi bo,→
+def them(self, sv):
+self._sv.append(sv)
+def si_so(self):
+return len(self._sv)
+def danh_sach(self):
+return list(self._sv) #
+tra ban sao,→
+def diem_tb(self):
+if not self._sv:
+return 0.0
+return sum(s.diem_tb() for s in
+self._sv) / len(self._sv),→
+def xep_hang(self):
+return sorted(self._sv,
+key=SinhVien.diem_tb, reverse=True),→
+diem_tb của lớp học không tự tính từ điểm thô: nó hỏi từng sinh viên. Mỗi lớp chỉ biết việc của mình.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 31 / 49
+
+===== PDF PAGE 32 =====
+Dựng dữ liệu và dùng
+lop = LopHoc("24TTH")
+for ten, cac_diem in [("Nguyen Van An", [8.5, 7.0]),
+("Tran Thi Binh", [4.0, 5.5]),
+("Le Van Chi", [9.0, 9.5])]:
+sv = SinhVien(ten, "24TTH")
+for d in cac_diem:
+sv.them_diem(d)
+lop.them(sv)
+print(lop.si_so(), round(lop.diem_tb(), 2))
+print([sv.ten for sv in lop.xep_hang()])
+Kết quả
+3 7.25
+['Le Van Chi', 'Nguyen Van An', 'Tran Thi Binh']
+key=SinhVien.diem_tb truyền phương
+thức chưa gắn đối tượng ; sorted gọi
+nó với từng sinh viên, đúng như
+key=len ở Bài 5.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 32 / 49
+
+===== PDF PAGE 33 =====
+T rả ra bản sao, đừng trả list nội bộ
+ds = lop.danh_sach() # tra ban sao
+ds.clear() # xoa tren ban sao
+print(lop.si_so()) # lop van nguyen
+ds = lop.danh_sach()
+ds[0].ten = "X" # phan tu van la doi tuong cu
+print(lop.danh_sach()[0].ten)
+Kết quả
+3
+X
+danh_sach() trả list(self._sv): xoá trên bản sao thì sĩ số
+vẫn là 3. T rả thẳng self._sv thì mọi chỗ trong chương trình đều
+xoá được danh sách ấy , và LopHoc mất quyền kiểm soát dữ liệu
+của chính nó.
+Nhưng đó là bản sao nông: list thì mới, các phần tử bên trong
+vẫn là chính những đối tượng cũ. Đổi ds[0].ten là đổi luôn sinh
+viên trong lớp học.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 33 / 49
+
+===== PDF PAGE 34 =====
+Bốn số rời đi với nhau bằng một thứ tự ngầm
+def do_dai(x1, y1, x2, y2):
+dx, dy = x1 - x2, y1 - y2
+return (dx * dx + dy * dy) ** 0.5
+print(do_dai(0, 0, 3, 4))
+print(do_dai(0, 3, 0, 4)) # lan thu tu
+Kết quả
+5.0
+1.0
+Hàm nhận bốn số rời. Không có gì trong mã nói x1 đi với y1: thứ
+tự ấy chỉ nằm trong đầu người viết.
+do_dai(0, 3, 0, 4) trả về 1.0. Ý muốn là hai điểm (0, 0) và
+(3, 4) ; gõ lệch một chỗ, kết quả vẫn là một con số hợp lệ.
+T rung điểm, góc, diện tích — hàm nào cũng phải nhận lại đúng
+bốn số ấy , đúng thứ tự ấy .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 34 / 49
+
+===== PDF PAGE 35 =====
+Gói hai số thành một đối tượng
+class Diem:
+def __init__(self, x, y):
+self.x, self.y = x, y
+class DoanThang:
+def __init__(self, dau, cuoi):
+self.dau = dau # mot Diem
+self.cuoi = cuoi # mot Diem
+def do_dai(self):
+dx = self.dau.x - self.cuoi.x
+dy = self.dau.y - self.cuoi.y
+return (dx * dx + dy * dy) ** 0.5
+d = DoanThang(Diem(0, 0), Diem(3, 4))
+print(d.do_dai(), d.dau.x, d.cuoi.y)
+Kết quả
+5.0 0 4
+DoanThang có hai Diem: cũng là quan hệ
+chứa, chỉ khác là chứa đúng một đối tượng
+mỗi bên thay vì một danh sách.
+Không còn bốn tham số rời để nhầm thứ
+tự: Diem(0, 0) và Diem(3, 4) tự nói
+chúng là gì.
+d.dau.x đi qua hai tầng: lấy điểm đầu
+của đoạn, rồi lấy hoành độ của điểm đó.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 35 / 49
+
+===== PDF PAGE 36 =====
+Chứa nhiều tầng: khoa, lớp học, sinh viên
+class Khoa:
+def __init__(self, ten, cac_lop):
+self.ten = ten
+self._lop = list(cac_lop)
+def si_so(self):
+return sum(lh.si_so()
+for lh in self._lop)
+def diem_tb(self):
+tong = 0.0
+for lh in self._lop:
+m = lh.si_so()
+tong += lh.diem_tb() * m
+return tong / self.si_so()
+kh = Khoa("Toan-Tin", [lop_a, lop_b])
+print(kh.si_so(), kh.diem_tb())
+print(lop_a.si_so(), lop_a.diem_tb())
+Kết quả
+3 7.25
+2 6.25
+lop_a và lop_b là hai LopHoc dựng như ở
+trang trước. Khoa không giữ sinh viên nào: nó
+hỏi LopHoc, LopHoc hỏi SinhVien. Mỗi tầng
+chỉ biết tầng ngay dưới.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 36 / 49
+
+===== PDF PAGE 37 =====
+Giữ một đối tượng không phải là có bản riêng
+class GiangVien:
+def __init__(self, ten):
+self.ten = ten
+class LopHoc:
+def __init__(self, ma, gvcn):
+self.ma = ma
+self.gvcn = gvcn # GiangVien
+self._sv = []
+gv = GiangVien("TS. Binh")
+a = LopHoc("24TTH", gv)
+b = LopHoc("25KDL", gv)
+gv.ten = "PGS. Binh" # sua mot cho
+print(a.gvcn.ten, b.gvcn.ten)
+print(a.gvcn is b.gvcn)
+Kết quả
+PGS. Binh PGS. Binh
+True
+a.gvcn và b.gvcn là cùng một đối tượng,
+không phải hai bản giống nhau: sửa tên qua gv
+thì cả hai lớp học đều đổi theo.
+Cạm bẫy thường gặp
+Dùng chung là đúng khi hai lớp học thật
+sự do một giảng viên phụ trách. Muốn mỗi
+lớp một bản riêng thì phải tạo GiangVien
+mới cho từng lớp.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 37 / 49
+
+===== PDF PAGE 38 =====
+Cùng khuôn ấy cho một bài toán khác
+class MatHang:
+def __init__(self, ten, gia,
+so_luong):
+self.ten, self.gia = ten, gia
+self.so_luong = so_luong
+def thanh_tien(self):
+return self.gia * self.so_luong
+gio = GioHang()
+gio.them(MatHang("But", 5000, 3))
+gio.them(MatHang("Vo", 12000, 2))
+print(gio.tong_tien())
+class GioHang:
+def __init__(self):
+self._hang = []
+def them(self, mh):
+self._hang.append(mh)
+def tong_tien(self):
+return sum(h.thanh_tien()
+for h in self._hang)
+Kết quả
+39000
+Khuôn chung: một list nội bộ, một phương thức them, phần tổng hợp hỏi từng phần tử —
+tong_tien viết đúng như diem_tb của LopHoc.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 38 / 49
+
+===== PDF PAGE 39 =====
+Ba dạng quan hệ chứa
+Đọc thành lời T rong mã Ví dụ
+có nhiều một list các đối tượng, khai
+trong __init__
+LopHoc có nhiều SinhVien; GioHang có
+nhiều MatHang; Khoa có nhiều LopHoc
+có một một thuộc tính là đối tượng DoanThang có hai Diem
+dùng nhận đối tượng qua tham số rồi
+gọi phương thức của nó
+LopHoc dùng GiangVien; BaoCao dùng
+LopHoc
+Ghi nhớ
+Đọc quan hệ thành lời trước khi viết class. Có một và có nhiều thì dùng quan hệ chứa;
+chỉ là một mới tính đến kế thừa ở Bài 9.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 39 / 49
+
+===== PDF PAGE 40 =====
+Roadmap
+1 Đặt vấn đề
+2 Dữ liệu đặt ở đâu
+3 Ba loại phương thức
+4 Quy ước đóng gói
+5 Quan hệ chứa
+6 Nhiều lớp cộng tác
+7 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 40 / 49
+
+===== PDF PAGE 41 =====
+Lớp thứ ba: chỉ lo việc trình bày
+class BaoCao:
+"""Chi lo viec trinh bay: khong
+tinh toan, khong sua du
+lieu."""
+,→
+,→
+def __init__(self, lop_hoc):
+self.lop_hoc = lop_hoc
+def dong_tom_tat(self):
+lh = self.lop_hoc
+return f"{lh.ma}: {lh.si_so()}
+SV, TB {lh.diem_tb():.2f}",→
+def bang(self):
+dong = [self.dong_tom_tat()]
+for i, sv in
+enumerate(self.lop_hoc.xep_hang(),
+start=1):
+,→
+,→
+loai = "Dat" if sv.dat() else "Chua
+dat",→
+dong.append(f"{i}.
+{sv.ten:<16}{sv.diem_tb():>5.2f}
+{loai}")
+,→
+,→
+return "\n".join(dong)
+BaoCao không giữ sinh viên, không tính trung bình. Nó nhận một LopHoc rồi hỏi — đó là tất cả.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 41 / 49
+
+===== PDF PAGE 42 =====
+Ba lớp chạy cùng nhau
+lop = LopHoc("24TTH")
+for ten, cac_diem in [("Nguyen Van An",
+[8.5, 7.0]),,→
+("Tran Thi Binh",
+[4.0, 5.5]),,→
+("Le Van Chi", [9.0,
+9.5])]:,→
+sv = SinhVien(ten, "24TTH")
+for d in cac_diem:
+sv.them_diem(d)
+lop.them(sv)
+bc = BaoCao(lop)
+print(bc.bang())
+Kết quả
+24TTH: 3 SV, TB 7.25
+1. Le Van Chi 9.25 Dat
+2. Nguyen Van An 7.75 Dat
+3. Tran Thi Binh 4.75 Chua dat
+Ba lớp, ba trách nhiệm: SinhVien giữ điểm của
+một người, LopHoc gom nhiều người, BaoCao
+biến số thành chữ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 42 / 49
+
+===== PDF PAGE 43 =====
+Đổi cách trình bày , hai lớp kia không đụng tới
+class BaoCaoCSV(BaoCao):
+def bang(self):
+dong = ["ten,diem_tb,ket_qua"]
+for sv in self.lop_hoc.xep_hang():
+dong.append(f"{sv.ten},{sv.diem_tb():.2f},"
+f"{'Dat' if sv.dat() else 'Chua dat'}")
+return "\n".join(dong)
+print(BaoCaoCSV(lop).bang())
+Kết quả
+ten,diem_tb,ket_qua
+Le Van Chi,9.25,Dat
+Nguyen Van An,7.75,Dat
+Tran Thi Binh,4.75,Chua dat
+Cần xuất CSV thay vì bảng chữ: viết lại đúng bang(), giữ
+nguyên SinhVien và LopHoc. Cách viết lại một phương
+thức như thế này là nội dung của Bài 9.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 43 / 49
+
+===== PDF PAGE 44 =====
+Mỗi lớp một trách nhiệm
+Lớp Biết gì Làm gì
+SinhVien tên, lớp, các điểm của một người tính trung bình, trả lời đạt hay chưa
+LopHoc danh sách sinh viên thêm, đếm sĩ số, trung bình lớp, xếp
+hạng
+BaoCao một lớp học dựng dòng tóm tắt và bảng kết quả
+Dấu hiệu chia đúng
+Sửa cách tính điểm trung bình thì chỉ động vào SinhVien. Sửa cách in thì chỉ động vào
+BaoCao. Một thay đổi mà phải sửa cả ba lớp là dấu hiệu chia sai.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 44 / 49
+
+===== PDF PAGE 45 =====
+Bài tập tại lớp
+Với ba lớp vừa dựng:
+1 Thêm vào LopHoc phương thức so_dat(), đếm số sinh viên đạt.
+2 Thêm vào LopHoc phương thức tim(ten), trả về sinh viên có tên đó hoặc None.
+3 Thêm vào BaoCao một dòng cuối bảng: "Dat: 2/3" .
+4 Cho LopHoc một thuộc tính của lớp SI_SO_TOI_DA = 40 , và để them() không nhận quá
+số đó.
+Dự đoán trước khi chạy
+Ở câu 4, them() từ chối khi đã đủ 40 sinh viên. Nếu một chỗ khác trong chương trình
+viết thẳng lop._sv.append(sv) thì giới hạn ấy còn tác dụng không?
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 45 / 49
+
+===== PDF PAGE 46 =====
+Roadmap
+1 Đặt vấn đề
+2 Dữ liệu đặt ở đâu
+3 Ba loại phương thức
+4 Quy ước đóng gói
+5 Quan hệ chứa
+6 Nhiều lớp cộng tác
+7 T ổng kết
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 46 / 49
+
+===== PDF PAGE 47 =====
+Cú pháp của cả bài — một trang
+Muốn Viết
+Thuộc tính của lớp class SinhVien: NGUONG_DAT = 5.0
+Thuộc tính của thể hiện def __init__(self): self.diem = []
+Sửa cho cả lớp SinhVien.NGUONG_DAT = 6.0 (không phải self.)
+Đếm số đối tượng SinhVien.so_sinh_vien += 1 (trong __init__)
+T ạo đối tượng kiểu khác @classmethod def tu_dong(cls, dong):
+Hàm tiện ích @staticmethod def hop_le(diem):
+Giá trị tính ra @property def diem_tb(self):
+Đánh dấu nội bộ self._sv self.__khoa (đổi tên)
+Chứa nhiều đối tượng self._sv = [] rồi self._sv.append(sv)
+Chứa một đối tượng self.dau = dau với dau là một Diem
+Hỏi xuống tầng dưới sum(lh.si_so() for lh in self._lop)
+T rả danh sách ra ngoài return list(self._sv)
+Sắp xếp theo phương thức sorted(ds, key=SinhVien.diem_tb, reverse=True)
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 47 / 49
+
+===== PDF PAGE 48 =====
+Bảy cạm bẫy im lặng trong bài này
+Việc làm Hỏng thế nào
+Để list hay dict ở cấp lớp mọi đối tượng dùng chung một bản; sửa một cái, đổi
+hết
+a.NGUONG_DAT = 8.0 chỉ đổi cho a, tưởng đổi cho cả lớp
+self.so_lan += 1 mỗi đối tượng một bộ đếm riêng, luôn dừng ở 1
+return self._sv bên ngoài xoá được danh sách nội bộ của đối tượng
+Sửa phần tử của bản sao bản sao nông: phần tử vẫn là đối tượng cũ
+Hai đối tượng giữ chung một đối tượng
+thứ ba
+sửa qua lối nào cũng thấy ở cả hai
+Gom cả ba việc vào một lớp vẫn chạy , nhưng sửa một chỗ là hỏng chỗ khác
+Ghi nhớ
+Cả bảy đều không báo lỗi. Cách phát hiện: tạo hai đối tượng, sửa một cái, rồi in cái kia
+ra xem có đổi theo không.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 48 / 49
+
+===== PDF PAGE 49 =====
+Chuẩn bị cho bài 9
+Dong cuoi in ra gi, vi sao?
+class SinhVienCaoHoc(SinhVien):
+def __init__(self, ten, lop,
+nguoi_huong_dan):,→
+self.nguoi_huong_dan =
+nguoi_huong_dan,→
+sv = SinhVienCaoHoc("Nguyen Van An", "24TTH",
+"TS. Binh"),→
+print(sv.nguoi_huong_dan)
+print(sv.diem_tb())
+Bài 9 — Kế thừa và đa hình : gọi
+phương thức lớp cha, cài đè, và khi nào
+không nên dùng kế thừa.
+TH6 (tuần 7): một chương trình gồm ba
+lớp cộng tác, viết từ đặc tả.
+Đọc trước: Python T utorial mục 9.5;
+Downey ,Think Python 2nd ed., chương
+18.
+Câu hỏi?
+Hà Minh T uấn — hmtuan@hcmus.edu.vn
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 8 November 8, 2026 49 / 49

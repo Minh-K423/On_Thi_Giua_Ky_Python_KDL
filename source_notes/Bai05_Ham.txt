@@ -1,0 +1,725 @@
+
+===== PDF PAGE 1 =====
+Python cho Khoa học dữ liệu
+Bài 5 — Hàm
+Hà Minh T uấn
+hmtuan@hcmus.edu.vn
+Khoa T oán - Tin học
+T rường Đại học Khoa học Tự nhiên
+ĐHQG, HCM
+October 12, 2026
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 1 / 53
+
+===== PDF PAGE 2 =====
+Nội dung bài học
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 2 / 53
+
+===== PDF PAGE 3 =====
+Roadmap
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 3 / 53
+
+===== PDF PAGE 4 =====
+Đoạn mã này chạy đúng
+Yêu cầu: đọc các dòng dữ liệu thô, bỏ dòng hỏng, in điểm trung bình từng môn.
+tong, dem = {}, {}
+for dong in DONG_THO:
+phan = dong.split(",")
+if len(phan) != 3:
+continue
+ten, mon, d = phan
+if ten == "" or mon == "" or d == "":
+continue
+d = float(d)
+if mon not in tong:
+tong[mon], dem[mon] = 0.0, 0
+tong[mon] += d
+dem[mon] += 1
+for mon in tong:
+print(mon, round(tong[mon] / dem[mon], 2))
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 4 / 53
+
+===== PDF PAGE 5 =====
+Nhưng hãy thử trả lời ba câu hỏi
+1 Bây giờ dữ liệu đổi sang phân tách bằng dấu chấm phẩy . Sửa ở đâu?
+2 Sếp hỏi “có bao nhiêu dòng bị bỏ?” . Thêm vào chỗ nào?
+3 Làm sao kiểm tra riêng phần đọc một dòng là đúng, mà không phải chạy cả khối và nhìn
+kết quả cuối?
+Ghi nhớ
+Đoạn mã trên chạy đúng, nhưng nó làm ba việc trộn vào nhau : tách dòng, lọc dòng
+hỏng, tính trung bình. Ba việc dính nhau thì không sửa riêng được, không thử riêng được,
+và không dùng lại được ở chỗ khác.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 5 / 53
+
+===== PDF PAGE 6 =====
+Từ ba mươi dòng đến ba trăm dòng
+Với ba mươi dòng, viết liền một mạch vẫn ổn.
+Với ba trăm dòng thì không. Mỗi lần sửa một chỗ lại làm hỏng một chỗ khác, và không
+ai — kể cả người viết ra nó một tháng trước — đọc lại được.
+Phân rã một yêu cầu lớn thành nhiều hàm nhỏ chính là ranh giới giữa người viết
+được ba mươi dòng và người viết được ba trăm dòng.
+Bài này gồm sáu phần
+Định nghĩa hàm và giá trị trả về → tham số và đối số từ khoá → phạm vi biến và hàm
+dựng sẵn → docstring → phân rã → mô-đun. Các phần đầu là công cụ; phân rã là lý
+do học chúng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 6 / 53
+
+===== PDF PAGE 7 =====
+Roadmap
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 7 / 53
+
+===== PDF PAGE 8 =====
+Bốn thành phần của một hàm
+def diem_chu(d): # ten ham + tham so
+if d >= 8:
+return "Gioi" # tra ve va thoat ngay
+elif d >= 5:
+return "Dat"
+return "Khong dat" # khong can else
+Kết quả
+diem_chu(9) -> Gioi diem_chu(6) -> Dat diem_chu(3) -> Khong dat
+return vừa trả giá trị vừa thoát khỏi hàm ngay lập tức. Dòng sau nó trong cùng nhánh
+không bao giờ chạy .
+Nhờ vậy nhánh cuối không cần else — tới được đó thì đã loại hết các trường hợp trên.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 8 / 53
+
+===== PDF PAGE 9 =====
+Cạm bẫy: quên return
+def trung_binh(ds):
+tb = sum(ds) / len(ds) # tinh xong... roi khong tra ve
+kq = trung_binh([8, 6, 7])
+print(kq)
+Kết quả
+None
+Cạm bẫy thường gặp
+Hàm không có return thì trả về None, và print không báo lỗi gì. Lỗi nổ ra muộn hơn,
+ở chỗ khác: TypeError: ... NoneType ... Thấy NoneType trong thông báo lỗi thì
+việc đầu tiên là đi tìm hàm quên return.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 9 / 53
+
+===== PDF PAGE 10 =====
+T rả về nhiều giá trị
+def thong_ke(ds):
+return min(ds), max(ds), sum(ds) / len(ds)
+thap, cao, tb = thong_ke([8.5, 4.0, 6.5, 9.0])
+Kết quả
+thap = 4.0 cao = 9.0 tb = 7.0
+Ghi nhớ
+Thực chất hàm vẫn trả về một thứ: một tuple (4.0, 9.0, 7.0). Dòng bên trái dùng
+đúng phép gán nhiều biến của bài 3. Nếu chỉ cần một giá trị thì viết _, cao, _ =
+thong_ke(ds) — dấu gạch dưới là quy ước cho “phần này tôi không dùng” .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 10 / 53
+
+===== PDF PAGE 11 =====
+Roadmap
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 11 / 53
+
+===== PDF PAGE 12 =====
+Tham số vị trí và tham số có tên
+def bao_cao(ten, diem, mon="Toan"): # mon co gia tri mac dinh
+return f"{ten} - {mon}: {diem}"
+bao_cao("An", 8.5) # An - Toan: 8.5
+bao_cao("An", 8.5, "Ly") # An - Ly: 8.5
+bao_cao("An", mon="Ly", diem=8.5) # An - Ly: 8.5
+bao_cao(diem=8.5, ten="An") # An - Toan: 8.5
+T ruyền theovị trí thì đúng thứ tự trong def.
+T ruyền theotên thì thứ tự không còn quan trọng.
+Tham số có giá trị mặc định phải đứng sau các tham số không có.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 12 / 53
+
+===== PDF PAGE 13 =====
+Gọi hàm: bốn lỗi hay gặp
+def bao_cao(ten, diem, mon="Toan"): ...
+bao_cao(ten="An", 8.5) # 1
+bao_cao("An", 8.5, ten="Binh") # 2
+bao_cao("An") # 3
+bao_cao("An", 8.5, month="Ly") # 4
+Thong bao loi that
+1 SyntaxError: positional argument follows keyword argument
+2 TypeError: bao_cao() got multiple values for argument 'ten'
+3 TypeError: bao_cao() missing 1 required positional argument: 'diem'
+4 TypeError: bao_cao() got an unexpected keyword argument 'month'
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 13 / 53
+
+===== PDF PAGE 14 =====
+Đọc bốn thông báo lỗi đó
+Từ khoá trong lỗi Nghĩa là
+positional ... follows
+keyword
+đã gọi theo tên rồi thì từ đó trở đi phải theo tên hết
+multiple values for một tham số nhận hai lần: một lần theo vị trí, một lần
+theo tên
+missing ... required thiếu tham số bắt buộc — tham số không có giá trị
+mặc định
+unexpected keyword
+argument
+gõ sai tên tham số
+Ghi nhớ
+Bốn lỗi này Python có báo, và báo rất rõ. Thói quen cần rèn: đọc chữ cuối cùng trong
+thông báo — nó luôn nói đúng tên tham số đang có vấn đề.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 14 / 53
+
+===== PDF PAGE 15 =====
+Vì sao nên gọi theo tên
+Doi cho hai doi so - Python khong bao gi ca
+bao_cao(8.5, "An")
+Kết quả
+8.5 - Toan: An
+Ghi nhớ
+Python không kiểm tra kiểu của đối số. Gọi sai thứ tự thì chương trình vẫn chạy , chỉ có
+kết quả là vô nghĩa. Hàm từ ba tham số trở lên, hoặc có hai tham số cùng kiểu, thì gọi
+theo tên — dài hơn vài ký tự, đổi lại đọc lại sáu tháng sau vẫn hiểu, và không bao giờ
+đổi chỗ nhầm.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 15 / 53
+
+===== PDF PAGE 16 =====
+Tham số chỉ nhận theo tên: dấu *
+def ve_bieu_do(du_lieu, *, tieu_de="", mau="xanh"):
+...
+ve_bieu_do([1, 2, 3], tieu_de="Diem thi", mau="do") # OK
+ve_bieu_do([1, 2, 3], "Diem thi") # loi
+Kết quả
+TypeError: ve_bieu_do() takes 1 positional argument but 2 were given
+Ghi nhớ
+Dấu * đứng một mình nghĩa là: mọi tham số sau nó bắt buộc phải gọi theo tên . Người
+viết hàm dùng nó để ép người gọi viết rõ ràng — và để sau này thêm bớt tham số tuỳ
+chọn mà không làm hỏng mã cũ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 16 / 53
+
+===== PDF PAGE 17 =====
+Vì sao phải học kỹ chỗ này
+Đây là chữ ký thật của hai hàm sẽ được gọi hằng ngày trong học phần:
+sorted(iterable, /, *, key=None, reverse=False)
+pandas.read_csv(filepath_or_buffer, *, sep=..., header=..., ...)
+Sau dấu *, tất cả đều là tham số chỉ nhận theo tên. Viết sorted(ds, True) là lỗi; phải
+viết sorted(ds, reverse=True).
+Dấu / thì ngược lại: những tham số trước nó chỉ nhận theo vị trí.
+Ghi nhớ
+Thư viện lớn gần như luôn thiết kế như vậy . Đọc được dòng chữ ký là đọc được tài liệu
+— kỹ năng này còn dùng suốt phần pandas, matplotlib và scikit-learn.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 17 / 53
+
+===== PDF PAGE 18 =====
+Tham số chỉ nhận theo vị trí: dấu /
+def chia(a, b, /):
+return a / b
+chia(10, 4) # 2.5 goi theo vi tri: duoc
+chia(a=10, b=4) # loi
+Kết quả
+TypeError: chia() got some positional-only arguments
+passed as keyword arguments: 'a, b'
+Ghi nhớ
+Tham số trước dấu / không cho gọi theo tên — dùng khi tên tham số không mang ý
+nghĩa gì với người gọi, và để sau này đổi tên mà không phá mã của ai.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 18 / 53
+
+===== PDF PAGE 19 =====
+Hàm dựng sẵn phần lớn là positional-only
+len([1, 2, 3]) # 3
+len(obj=[1, 2, 3]) # loi
+abs(x=-5) # loi
+Kết quả
+TypeError: len() takes no keyword arguments
+TypeError: abs() takes no keyword arguments
+Ghi nhớ
+Vì vậy cần biết đến dấu /: gặp thông báo takes no keyword arguments thì hiểu ngay
+là hàm đó chỉ nhận theo vị trí, chứ không phải mình gõ sai tên tham số.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 19 / 53
+
+===== PDF PAGE 20 =====
+*args — số đối số vị trí tuỳ ý
+def tong(*cac_so):
+kq = 0
+for s in cac_so:
+kq += s
+return kq
+tong(1, 2, 3) # 6 cac_so la tuple (1, 2, 3)
+tong() # 0 cac_so la tuple rong ()
+tong(*[4, 5, 6]) # 15 dau * trai danh sach thanh doi so vi tri
+Ghi nhớ
+*cac_so gom mọi đối số vị trí thừa vào một tuple. Cùng dấu * có hai vai: đặt trong def
+là gom lại, đặt ở chỗ gọi hàm là trải ra. ** cũng vậy , chỉ khác là làm việc với từ điển.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 20 / 53
+
+===== PDF PAGE 21 =====
+**kwargs — gom mọi đối số từ khoá còn lại
+def ghi_log(muc, **thong_tin):
+print(muc, thong_tin)
+ghi_log("LOI", dong=42, tep="diem.csv")
+Kết quả
+LOI {'dong': 42, 'tep': 'diem.csv'}
+Chieu nguoc lai: trai mot tu dien ra thanh doi so tu khoa
+cau_hinh = {"tieu_de": "Diem thi", "mau": "tim"}
+ve_bieu_do([1, 2, 3], **cau_hinh) # nhu goi tieu_de=..., mau=...
+**thong_tin chỉ là một từ điển — gọi không kèm gì thì nó rỗng. Ở giai đoạn này chỉ cần
+đọc hiểu được khi gặp nó trong tài liệu thư viện.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 21 / 53
+
+===== PDF PAGE 22 =====
+Sáu loại tham số — và thứ tự bắt buộc
+Mot ham dung du ca sau loai
+def f(vt, /, thuong, mac_dinh=0, *them, chi_ten, **con_lai):
+...
+Loại Viết Gọi bằng
+Chỉ theo vị trí trước / bắt buộc theo vị trí
+Vị trí hoặc tên giữa / và * cách nào cũng được
+Có mặc định = gia_tri bỏ qua được khi gọi
+Gom vị trí thừa *them thành một tuple
+Chỉ theo tên sau * bắt buộc theo tên
+Gom tên thừa **con_lai thành một từ điển
+Ghi nhớ
+Thứ tự trong bảng cũng là thứ tự bắt buộc khi viết def. Hầu hết hàm ta viết chỉ dùng
+hai ba loại đầu — bảng này để đọc được chữ ký của thư viện.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 22 / 53
+
+===== PDF PAGE 23 =====
+Cạm bẫy lớn nhất của bài: giá trị mặc định khả biến
+def them_diem(d, ds=[]):
+ds.append(d)
+return ds
+print(them_diem(8))
+print(them_diem(6))
+print(them_diem(9))
+Dự đoán trước khi chạy
+Ba dòng in ra [8], [6], [9] — hay cái gì khác?
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 23 / 53
+
+===== PDF PAGE 24 =====
+Kết quả
+Kết quả
+[8]
+[8, 6]
+[8, 6, 9]
+Danh sách mặc định được tạo một lần duy nhất , lúc Python đọc dòng def — không
+phải mỗi lần gọi hàm.
+Nó khả biến, nên mọi lần gọi đều sửa chung nó — đúng câu chuyện tham chiếu của bài 3,
+ở chỗ khó ngờ nhất.
+Cạm bẫy thường gặp
+Lỗi này rất khó tìm vì hàm chỉ sai từ lần gọi thứ hai trở đi . Thử một lần thấy đúng, đưa
+vào chương trình thật thì hỏng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 24 / 53
+
+===== PDF PAGE 25 =====
+Cách sửa — và quy tắc để không bao giờ mắc lại
+def them_diem(d, ds=None):
+if ds is None:
+ds = [] # tao MOI o moi lan goi
+ds.append(d)
+return ds
+# them_diem(8) -> [8] them_diem(6) -> [6] them_diem(9) -> [9]
+Quy tắc
+Giá trị mặc định chỉ được là thứ bất biến : số, chuỗi, True/False, None. Cần mặc định
+là danh sách hay từ điển thì luôn viết = None rồi tạo bên trong hàm.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 25 / 53
+
+===== PDF PAGE 26 =====
+Roadmap
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 26 / 53
+
+===== PDF PAGE 27 =====
+Bên trong hàm đọc được biến bên ngoài
+NGUONG = 5
+def dat(d):
+return d >= NGUONG # doc duoc NGUONG
+dat(6) # True
+dat(3) # False
+Ghi nhớ
+Đây là cách dùng đúng cho hằng số cấu hình : ngưỡng đạt, đường dẫn thư mục, tên cột.
+Quy ước viết HOA để người đọc biết ngay “cái này đặt một lần, không đổi” .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 27 / 53
+
+===== PDF PAGE 28 =====
+Nhưng gán thì tạo ra một biến mới
+dem = 0
+def tang():
+dem = dem + 1 # Python coi 'dem' la bien CUA RIENG HAM
+tang()
+Kết quả
+UnboundLocalError: cannot access local variable 'dem'
+where it is not associated with a value
+Thấy có phép gán cho dem bên trong hàm, Python xếp dem thành biến cục bộ trên toàn
+bộ thân hàm — kể cả ở vế phải.
+Vế phải đọc dem khi nó chưa có giá trị nào → lỗi.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 28 / 53
+
+===== PDF PAGE 29 =====
+Cách làm đúng: nhận vào, trả ra
+def tang(dem):
+return dem + 1
+dem = tang(dem) # dem = 1
+Vì sao không dùng global
+Python có từ khoá global cho phép hàm ghi đè biến bên ngoài. Học phần này không
+dùng nó, vì nó phá đúng cái tính chất làm hàm có ích: nhìn vào dòng gọi hàm là biết
+được nó đụng vào cái gì . Hàm cần thứ gì thì nhận qua tham số , thay đổi gì thì trả về .
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 29 / 53
+
+===== PDF PAGE 30 =====
+Một ngoại lệ phải nhớ
+def them_mot(ds):
+ds.append(1) # khong gan, chi SUA doi tuong
+kho = [9]
+them_mot(kho)
+print(kho) # -> [9, 1]
+Cạm bẫy thường gặp
+Hàm không gán, không return, mà kho vẫn đổi — vì ds và kho là hai nhãn dán lên
+cùng một danh sách. Phạm vi biến chặn phép gán, không chặn phép sửa.
+Hàm nào có sửa dữ liệu của người gọi thì phải nói rõ ngay trong tên ( them_mot,
+sap_xep_tai_cho); hàm chỉ tính toán thì tuyệt đối không đụng vào đối số.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 30 / 53
+
+===== PDF PAGE 31 =====
+Python tìm một cái tên ở đâu
+x = "global"
+def ngoai():
+x = "enclosing"
+def trong():
+x = "local"
+print(x) # local
+trong()
+print(x) # enclosing
+print(x) # global
+Quy tắc bốn tầng, tra từ trong ra ngoài
+Local → Enclosing (hàm bao ngoài) → Global (mức tệp) → Built-in. T ầng nào có tên
+đó trước thì dừng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 31 / 53
+
+===== PDF PAGE 32 =====
+T ầng ngoài cùng: hàm dựng sẵn
+Python cho sẵn khoảng bảy mươi hàm và kiểu, dùng được ngay không cần khai báo gì.
+Nhóm Hàm
+Gộp một dãy len sum min max sorted any all
+Đổi kiểu int float str bool list dict set tuple
+Duyệt range enumerate zip reversed
+Số abs round pow divmod
+Xem xét type isinstance dir help
+Vào ra print input open
+Ghi nhớ
+T rước khi tự viết một hàm, hãy tự hỏi Python đã có sẵn chưa. Viết lại sum bằng vòng
+lặp vừa dài hơn vừa chạy chậm hơn.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 32 / 53
+
+===== PDF PAGE 33 =====
+Cạm bẫy: đặt tên biến trùng tên hàm dựng sẵn
+sum = 10 # dat ten bien la 'sum'
+sum([1, 2, 3])
+Kết quả
+TypeError: 'int' object is not callable
+Cạm bẫy thường gặp
+T ầngglobal được tra trước tầng built-in, nên biến sum của ta che mất hàm sum của
+Python — và che cho tới hết chương trình. Những tên hay bị dùng nhầm nhất: sum,
+list, dict, str, type, id, max, input.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 33 / 53
+
+===== PDF PAGE 34 =====
+Roadmap
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 34 / 53
+
+===== PDF PAGE 35 =====
+Viết cho người đọc sáu tháng sau
+def diem_chu(diem: float, nguong_dat: float = 5.0) -> str:
+"""Doi diem so thanh xep loai chu.
+diem -- diem trong thang 10
+nguong_dat -- diem toi thieu de dat
+"""
+if diem >= 8:
+return "Gioi"
+if diem >= nguong_dat:
+return "Dat"
+return "Khong dat"
+Docstring là chuỗi ba nháy ngay dưới dòng def. Gõ help(diem_chu) là ra nó.
+Chú thích kiểu : float và -> str nói kiểu vào và kiểu ra.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 35 / 53
+
+===== PDF PAGE 36 =====
+Chú thích kiểu không bắt lỗi
+diem_chu("tam ruoi") # Python VAN chay, roi loi o dong so sanh
+Python không kiểm tra chú thích kiểu lúc chạy . Nó là lời nhắn cho người đọc và cho
+công cụ, không phải một ràng buộc.
+Đổi lại, trình soạn thảo dùng nó để gợi ý và cảnh báo ngay khi ta đang gõ — đó mới là
+chỗ nó đáng giá.
+Yêu cầu tối thiểu của học phần
+Mỗi hàm một dòng docstring nói hàm làm gì, viết ở dạng mệnh lệnh: “Đổi điểm số
+thành xếp loại chữ” . Hàm nào không tóm được trong một câu thì gần như chắc chắn nó
+đang làm quá nhiều việc — và đó là dấu hiệu phải tách ra.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 36 / 53
+
+===== PDF PAGE 37 =====
+Roadmap
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 37 / 53
+
+===== PDF PAGE 38 =====
+Bốn bước, làm trên giấy trước khi gõ
+1 Kể lại yêu cầu thành các động từ. “Tách một dòng, lọc dòng hỏng, tính trung bình, in
+bảng. ”
+2 Mỗi động từ là một hàm. Tên hàm là động từ đó.
+3 Với mỗi hàm, viết ra: nhận gì, trả gì. Chỉ hai dòng, chưa cần mã.
+4 Ghép lại. Nếu đầu ra của hàm này khớp đầu vào của hàm kia thì phân rã đã đúng;
+không khớp thì sửa ngay trên giấy , rẻ hơn sửa trong mã rất nhiều.
+Ghi nhớ
+Bước 3 là bước hay bị bỏ qua nhất, và cũng là bước quyết định. Một hàm mà ta không
+nói được nó nhận gì trả gì thì chưa nghĩ xong, gõ ra chỉ tốn thời gian.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 38 / 53
+
+===== PDF PAGE 39 =====
+Áp dụng vào ví dụ đầu bài
+Hàm Nhận T rả
+tach_ban_ghi một dòng chuỗi tuple (ten, mon, diem)
+hoặc None
+doc_tat_ca danh sách dòng danh sách bản ghi hợp lệ
+trung_binh_theo_mon danh sách bản ghi từ điển mon -> diem
+in_bang từ điển không trả gì, chỉ in
+Ghi nhớ
+Cột “T rả” của hàm trên khớp cột “Nhận” của hàm dưới. Bốn hàm nối thành một dây
+chuyền — đó là dấu hiệu phân rã đúng.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 39 / 53
+
+===== PDF PAGE 40 =====
+Hàm 1 — tách một dòng
+def tach_ban_ghi(dong):
+"""Doi mot dong thanh (ten, mon, diem); tra None neu dong hong."""
+phan = dong.split(",")
+if len(phan) != 3:
+return None
+ten, mon, diem = phan
+if ten == "" or mon == "" or diem == "":
+return None
+return ten, mon, float(diem)
+Kết quả
+tach_ban_ghi("An,Toan,8.5") -> ('An', 'Toan', 8.5)
+tach_ban_ghi("loi,,") -> None
+tach_ban_ghi("Ha,Toan") -> None
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 40 / 53
+
+===== PDF PAGE 41 =====
+Hàm 2 — gom những bản ghi đọc được
+def doc_tat_ca(dong_list):
+"""Loc lay nhung ban ghi doc duoc."""
+ket_qua = []
+for dong in dong_list:
+bg = tach_ban_ghi(dong)
+if bg is not None:
+ket_qua.append(bg)
+return ket_qua
+Ghi nhớ
+Đây đúng là mẫu lọc của bài 4, chỉ khác ở chỗ điều kiện lọc đã được đẩy hết vào
+tach_ban_ghi. Hàm này không cần biết một dòng thế nào là hỏng — nó chỉ cần biết
+None nghĩa là bỏ.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 41 / 53
+
+===== PDF PAGE 42 =====
+Hàm 3 — tính trung bình
+def trung_binh_theo_mon(ban_ghi):
+"""Tra ve dict: mon -> diem trung binh."""
+tong, dem = {}, {}
+for ten, mon, d in ban_ghi:
+if mon not in tong:
+tong[mon], dem[mon] = 0.0, 0
+tong[mon] += d
+dem[mon] += 1
+ket_qua = {}
+for mon in tong:
+ket_qua[mon] = round(tong[mon] / dem[mon], 2)
+return ket_qua
+Ghi nhớ
+Nguyên văn mẫu gom nhóm của bài 4, nay có một cái tên và một dòng docstring.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 42 / 53
+
+===== PDF PAGE 43 =====
+Hàm 4, rồi ghép lại
+def in_bang(bang):
+"""In bang trung binh theo mon."""
+for mon, d in bang.items():
+print(mon, d)
+ban_ghi = doc_tat_ca(DONG_THO)
+in_bang(trung_binh_theo_mon(ban_ghi))
+Kết quả
+Toan 8.75
+Ly 5.25
+Hai dòng cuối đọc gần như một câu tiếng Việt: chi tiết nằm bên trong hàm, ý đồ nằm ở chỗ
+gọi hàm.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 43 / 53
+
+===== PDF PAGE 44 =====
+Ba câu hỏi đầu bài, trả lời lại
+Câu hỏi Bây giờ
+Đổi sang dấu chấm phẩy? sửa một dòng trong tach_ban_ghi
+Đếm số dòng bị bỏ? đã có sẵn: len(DONG_THO) -
+len(ban_ghi)
+Thử riêng phần đọc một dòng? gọi thẳng tach_ban_ghi("...")và nhìn kết
+quả
+Ghi nhớ
+Số dòng mã gần như không đổi. Cái đổi là mỗi thay đổi giờ chỉ chạm vào một chỗ .
+Đó là toàn bộ giá trị của việc phân rã — và cũng là tiêu chí chấm trong bài thực hành.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 44 / 53
+
+===== PDF PAGE 45 =====
+Bốn dấu hiệu một hàm cần tách nhỏ hơn
+1 Không tóm được nó trong một câu docstring.
+2 Tên hàm phải dùng chữ “ và”: doc_va_tinh_va_in.
+3 Dài hơn khoảng hai mươi dòng , hoặc thụt lề sâu quá ba mức.
+4 Muốn thử một phần của nó thì phải chạy cả hàm.
+Nhưng đừng tách quá tay
+Hàm chỉ có một dòng và chỉ được gọi ở đúng một chỗ thường là thừa. Mục đích là đặt
+tên cho một ý , không phải là làm cho số hàm nhiều lên.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 45 / 53
+
+===== PDF PAGE 46 =====
+Roadmap
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 46 / 53
+
+===== PDF PAGE 47 =====
+Mỗi tệp .py là một mô-đun
+Phân rã thành hàm rồi thì bước tiếp theo là phân rã thành tệp: nhóm các hàm cùng một việc
+vào một tệp riêng.
+doc_diem.py
+"""Cac ham doc va lam sach du lieu diem."""
+NGUONG_DAT = 5.0
+def tach_ban_ghi(dong):
+...
+main.py — ba cach lay do tu mo-dun ve
+import doc_diem # 1
+from doc_diem import tach_ban_ghi, NGUONG_DAT # 2
+import statistics as st # 3
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 47 / 53
+
+===== PDF PAGE 48 =====
+Ba cách đó khác nhau chỗ nào
+Cách viết Rồi gọi thế nào
+import doc_diem doc_diem.tach_ban_ghi(...)
+from doc_diem import
+tach_ban_ghi
+tach_ban_ghi(...)
+import statistics as st st.mean(...)
+Ghi nhớ
+Cách 1 dài hơn nhưng đọc lại biết ngay hàm đến từ đâu. Cách 2 gọn, dùng khi chỉ lấy
+vài tên. Cách 3 dùng cho tên mô-đun dài: import pandas as pd.
+Đừng viết from doc_diem import * — nó kéo hết mọi tên vào, và người đọc không còn
+biết một cái tên từ đâu ra.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 48 / 53
+
+===== PDF PAGE 49 =====
+if __name__ == "__main__"
+cuoi tep doc_diem.py
+if __name__ == "__main__":
+print(tach_ban_ghi("An,Toan,8.5"))
+Tình huống __name__ bằng Khối trên
+chạy python doc_diem.py "__main__" có chạy
+tệp khác viết import doc_diem "doc_diem" không chạy
+Ghi nhớ
+Không có dòng if này thì mỗi lần ai đó import mô-đun của ta, phần thử nghiệm sẽ tự
+chạy — in ra lung tung giữa chương trình của họ. Đây là dòng gần như mọi tệp Python
+nghiêm túc đều có.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 49 / 53
+
+===== PDF PAGE 50 =====
+Roadmap
+1 Đặt vấn đề
+2 Định nghĩa hàm và giá trị trả về
+3 Tham số và đối số từ khoá
+4 Phạm vi biến và hàm dựng sẵn
+5 Docstring và chú thích kiểu
+6 Phân rã một yêu cầu lớn
+7 Từ hàm đến mô-đun
+8 Tóm tắt
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 50 / 53
+
+===== PDF PAGE 51 =====
+Chín câu cần mang về
+1 return vừa trả giá trị vừa thoát hàm. Không có return thì hàm trả về None.
+2 Thấy NoneType trong thông báo lỗi → đi tìm hàm quên return.
+3 Hàm từ ba tham số trở lên thì gọi theo tên. Sau dấu * trong chữ ký thì bắt buộc gọi theo
+tên.
+4 Giá trị mặc định chỉ được là thứ bất biến. Cần danh sách thì viết = None.
+5 T rong hàm,đọc biến ngoài thì được, gán thì tạo biến mới.
+6 Phạm vi biến chặn phép gán, không chặn phép sửa dữ liệu khả biến.
+7 Mỗi hàm một việc, một câu docstring nói rõ việc đó.
+8 Python tra tên theo bốn tầng L-E-G-B. Đặt tên biến trùng hàm dựng sẵn là che mất nó.
+9 Mỗi tệp .py là một mô-đun; phần thử nghiệm đặt trong if __name__ == "__main__".
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 51 / 53
+
+===== PDF PAGE 52 =====
+Ba cạm bẫy im lặng trong bài này
+Việc làm Hỏng thế nào
+Quên return hàm trả None, lỗi nổ ở chỗ khác
+def f(ds=[]) danh sách dùng chung, sai từ lần gọi thứ hai
+Gọi hàm sai thứ tự đối số vẫn chạy , kết quả vô nghĩa
+Ghi nhớ
+Cả ba đều là biến thể của một chuyện: Python tin ta. Nó không kiểm tra kiểu, không
+kiểm tra ta có trả về gì không, không cản ta dùng chung một danh sách. Đổi lại sự tự
+do đó, người viết phải tự cẩn thận.
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 52 / 53
+
+===== PDF PAGE 53 =====
+Kết thúc phần cốt lõi của Chương 1
+Các bài từ 2 đến 5 cho đủ bốn thứ để viết được một chương trình bất kỳ: gán giá trị, rẽ
+nhánh, lặp, và gói một việc vào một cái tên.
+Bài 6 — tệp và biến đổi dữ liệu — chỉ dừng ở mức giới thiệu, vì ta sẽ dùng nó liên tục
+trong mười một tuần còn lại.
+Chương 2 là lập trình hướng đối tượng , chiếm một phần ba học phần. Ở đó, cái ta
+gói lại không còn là một việc nữa, mà là dữ liệu cùng với những việc làm trên dữ liệu đó .
+Câu hỏi?
+Hà Minh T uấn — hmtuan@hcmus.edu.vn
+Hà Minh T uấn (Khoa T oán - Tin học) Bài 5 October 12, 2026 53 / 53
