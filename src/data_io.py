@@ -15,6 +15,15 @@ def load_config() -> dict:
     """Read the local UTF-8 configuration. Plumbing supplied."""
     return json.loads((RAW / "config.json").read_text(encoding="utf-8"))
 
+def _field_check(expected: set, row: dict) -> bool:
+    return (len(expected - set(row)) == 0) 
+
+def _check_no_missing_string(row: dict):
+    for key, value in row.items():
+        if value == None:
+            value = "None"
+
+def 
 
 def normalize_row(row: dict) -> dict:
     """Return a new normalized record, or raise ValueError for invalid data.
@@ -23,6 +32,10 @@ def normalize_row(row: dict) -> dict:
     Keep input unchanged. Tags become a sorted list of unique lowercase strings.
     Missing/unexpected CSV fields are ValueError, not silently ignored.
     """
+
+    '''Validation order: (1) exact field set and nonmissing string cells, (2) normalize text and require ID/player, (3) allowed zone/status, (4) parse the three integers, (5) nonnegative money, (6) duration and cancellation rules. Raise ValueError with a useful reason for the first failure. Unexpected extra/missing CSV columns are invalid; a bad header stops loading immediately. TypeError and misspelled programming names must not vanish behind a broad exception handler.'''
+
+
     raise NotImplementedError("R1: normalize_row")
 
 
